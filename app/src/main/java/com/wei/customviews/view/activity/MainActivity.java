@@ -123,8 +123,8 @@ public class MainActivity extends BaseActivity
     protected void onResume() {
         super.onResume();
 
-        mHandler.obtainMessage();
-        mHandler.sendEmptyMessage(UPDATE);
+//        mHandler.obtainMessage();
+//        mHandler.sendEmptyMessage(UPDATE);
     }
 
     private final int UPDATE = 0x011;
