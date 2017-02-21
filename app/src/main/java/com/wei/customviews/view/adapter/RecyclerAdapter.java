@@ -1,11 +1,9 @@
-package com.wei.customviews.ui.adapter;
+package com.wei.customviews.view.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.wei.customviews.R;

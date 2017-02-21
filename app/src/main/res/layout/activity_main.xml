@@ -5,12 +5,41 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.wei.customviews.ui.activity.MainActivity">
+    tools:context="com.wei.customviews.view.activity.MainActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rc_view"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+    </android.support.v7.widget.RecyclerView>
+
+    <com.wei.customviews.view.widget.CusLinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
+        <com.wei.customviews.view.widget.CusRelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.wei.customviews.view.widget.CusImageView
+                android:id="@+id/imgView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/mode2"/>
+
+            <TextView
+                android:id="@+id/txtView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/imgView"
+                android:text="10"
+                android:textSize="18sp"
+                android:layout_centerHorizontal="true"/>
+        </com.wei.customviews.view.widget.CusRelativeLayout>
+    </com.wei.customviews.view.widget.CusLinearLayout>
+
+
+
 </RelativeLayout>

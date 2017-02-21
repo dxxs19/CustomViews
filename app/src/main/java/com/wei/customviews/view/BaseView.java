@@ -1,4 +1,4 @@
-package com.wei.customviews.ui;
+package com.wei.customviews.view;
 
 /**
  * author: WEI

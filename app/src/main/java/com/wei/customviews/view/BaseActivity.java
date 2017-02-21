@@ -1,9 +1,8 @@
-package com.wei.customviews.ui;
+package com.wei.customviews.view;
 
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.wei.utillibrary.LogUtil;
 
@@ -15,12 +14,10 @@ import com.wei.utillibrary.LogUtil;
 
 public class BaseActivity extends AppCompatActivity
 {
-    public String TAG = "";
+    protected String TAG = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
-        TAG = getClass().getSimpleName();
-        LogUtil.e(TAG, "当前class : " + TAG);
     }
 }
