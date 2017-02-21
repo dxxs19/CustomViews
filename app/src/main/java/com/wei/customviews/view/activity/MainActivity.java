@@ -1,16 +1,21 @@
 package com.wei.customviews.view.activity;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wei.customviews.R;
+import com.wei.customviews.db.UserDAO;
 import com.wei.customviews.view.BaseActivity;
 import com.wei.customviews.view.adapter.RecyclerAdapter;
 import com.wei.utillibrary.LogUtil;
@@ -23,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.R.id.message;
+import static android.R.id.switch_widget;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity
@@ -36,6 +42,7 @@ public class MainActivity extends BaseActivity
     private RecyclerAdapter mRecyclerAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<String> mData = new ArrayList<>();
+    private UserDAO mUserDAO;
 
     @AfterViews
     void initView()
@@ -55,6 +62,60 @@ public class MainActivity extends BaseActivity
         mRecyclerAdapter = new RecyclerAdapter(mData);
         mRecyclerView.setAdapter(mRecyclerAdapter);
 
+        mUserDAO = UserDAO.getInstance(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.add_item:
+                addData();
+                break;
+
+            case R.id.remove_item:
+//                deleteData();
+                break;
+
+            case R.id.query_item:
+                queryData();
+                break;
+
+            case R.id.update_item:
+//                updateData();
+                break;
+        }
+        return true;
+    }
+
+    private void queryData()
+    {
+        Cursor cursor = mUserDAO.queryAllUsers();
+        if (cursor.moveToFirst())
+        {
+            do{
+                String name = cursor.getString(cursor.getColumnIndex("username"));
+                String pass = cursor.getString(cursor.getColumnIndex("password"));
+                LogUtil.e(TAG, "--- info --- " + name + ", " + pass);
+            }
+            while (cursor.moveToNext());
+        }
+    }
+
+    private void addData()
+    {
+        ContentValues values = new ContentValues();
+        values.put("username", "caixiangwei");
+        values.put("password", "15458787");
+        mUserDAO.addUser(values);
     }
 
     private int count = 10;

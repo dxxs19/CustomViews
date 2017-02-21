@@ -16,7 +16,8 @@
 
     <com.wei.customviews.view.widget.CusLinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="visible">
 
         <com.wei.customviews.view.widget.CusRelativeLayout
             android:layout_width="match_parent"
@@ -39,7 +40,5 @@
                 android:layout_centerHorizontal="true"/>
         </com.wei.customviews.view.widget.CusRelativeLayout>
     </com.wei.customviews.view.widget.CusLinearLayout>
-
-
 
 </RelativeLayout>
