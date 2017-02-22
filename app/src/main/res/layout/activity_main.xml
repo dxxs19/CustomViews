@@ -17,11 +17,37 @@
     <com.wei.customviews.view.widget.CusLinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="horizontal"
         android:visibility="visible">
 
+        <com.wei.customviews.view.widget.CusViewGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <com.wei.customviews.view.widget.CusImageView
+            android:id="@+id/imgView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/mode2"/>
+
+        <com.wei.customviews.view.widget.CusImageView
+            android:id="@+id/imgView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/mode2"/>
+
+        <com.wei.customviews.view.widget.CusImageView
+            android:id="@+id/imgView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/mode2"/>
+        </com.wei.customviews.view.widget.CusViewGroup>
         <com.wei.customviews.view.widget.CusRelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="visible">
 
             <com.wei.customviews.view.widget.CusImageView
                 android:id="@+id/imgView"
