@@ -25,6 +25,12 @@ public class UserDAO
         db = mDatabaseHelper.getWritableDatabase();
     }
 
+
+    public DatabaseHelper getDatabaseHelper() {
+        return mDatabaseHelper;
+    }
+
+
     public static UserDAO getInstance(Context context)
     {
         if (mUserDAO == null)
