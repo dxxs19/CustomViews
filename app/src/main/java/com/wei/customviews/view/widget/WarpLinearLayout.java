@@ -44,7 +44,7 @@ public class WarpLinearLayout extends ViewGroup {
         int height = 0;
         int childCount = getChildCount();
         /**
-         * 在调用childView。getMeasre之前必须先调用该行代码，用于对子View大小的测量
+         * 在调用childView.getMeasre之前必须先调用该行代码，用于对子View大小的测量
          */
         measureChildren(widthMeasureSpec, heightMeasureSpec);
         /**

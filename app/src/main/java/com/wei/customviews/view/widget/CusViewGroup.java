@@ -21,7 +21,7 @@ import java.util.List;
 public class CusViewGroup extends ViewGroup
 {
     private final String TAG = getClass().getSimpleName();
-    private List<View> mViews = new ArrayList<>();
+    private List<LineFeed> mLineFeeds = new ArrayList<>();
 
     public CusViewGroup(Context context) {
         super(context);
@@ -63,22 +63,21 @@ public class CusViewGroup extends ViewGroup
                 for (int i = 0; i < childCount; i ++)
                 {
                     View view = getChildAt(i);
-                    mViews.add(view);
                     width += view.getMeasuredWidth();
                     LogUtil.e(TAG, "getChildAt(" + i + ").getmeasuredWidth() = " + getChildAt(i).getMeasuredWidth());
                 }
                 width += getPaddingLeft() + getPaddingRight();
                 width = width > widthSize ? widthSize : width;
 
-                if (width > widthSize)
-                {
-                    // 计算行数
-                    int row = width%widthSize == 0 ? width/widthSize : (width/widthSize + 1);
-                    for (int i = 0; i < row; i ++)
-                    {
-                        height += measureHeight();
-                    }
-                }
+//                if (width > widthSize)
+//                {
+//                    // 计算行数
+//                    int row = width%widthSize == 0 ? width/widthSize : (width/widthSize + 1);
+//                    for (int i = 0; i < row; i ++)
+//                    {
+//                        height += measureHeight();
+//                    }
+//                }
                 break;
 
             case MeasureSpec.UNSPECIFIED:
@@ -94,6 +93,46 @@ public class CusViewGroup extends ViewGroup
                 break;
         }
 
+        LineFeed lineFeed = new LineFeed();
+        for (int i = 0; i < childCount; i ++)
+        {
+            View view = getChildAt(i);
+            if (lineFeed.lineWidth + view.getMeasuredWidth() > width)
+            {
+                if (lineFeed.mSameLineViews.size() == 0)
+                {
+                    // 还没有添加view
+                    lineFeed.addView(view);
+                    mLineFeeds.add(lineFeed);
+                    lineFeed = new LineFeed();
+                }
+                else
+                {
+                    mLineFeeds.add(lineFeed);
+                    lineFeed = new LineFeed();
+                    lineFeed.addView(view);
+                }
+            }
+            else
+            {
+                lineFeed.addView(view);
+            }
+        }
+
+        /**
+         * 添加最后一行
+         */
+        if (lineFeed.mSameLineViews.size() > 0 && !mLineFeeds.contains(lineFeed))
+        {
+            mLineFeeds.add(lineFeed);
+        }
+
+        height = getPaddingTop() + getPaddingBottom();
+        for (int i = 0; i < mLineFeeds.size(); i ++)
+        {
+            height += mLineFeeds.get(i).height; // 行x高
+        }
+
         switch (heightMode)
         {
             case MeasureSpec.EXACTLY:
@@ -101,30 +140,10 @@ public class CusViewGroup extends ViewGroup
                 break;
 
             case MeasureSpec.AT_MOST:
-                mViews.clear();
-                for (int i = 0; i < childCount; i ++)
-                {
-                    View view = getChildAt(i);
-                    mViews.add(view);
-                    width += view.getMeasuredWidth();
-                    LogUtil.e(TAG, "getChildAt(" + i + ").getmeasuredWidth() = " + getChildAt(i).getMeasuredWidth());
-                }
-                width += getPaddingLeft() + getPaddingRight();
-                if (width > widthSize)
-                {
-                    // 计算行数
-                    int row = width%widthSize == 0 ? width/widthSize : (width/widthSize + 1);
-                    for (int i = 0; i < row; i ++)
-                    {
-                        height += measureHeight();
-                    }
-                }
-                width = width > widthSize ? widthSize : width;
+                height = height > heightSize ? heightSize : height;
                 break;
-
             case MeasureSpec.UNSPECIFIED:
                 break;
-
             default:
                 break;
         }
@@ -137,20 +156,46 @@ public class CusViewGroup extends ViewGroup
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         LogUtil.e(TAG, "--- onLayout ---, " + l + ", " + t + ", " + r + ", " + b);
-        int size = getChildCount();
-        int width = 0, height = 0, index = 0;
-        count = 0;
-        for (int i = 0; i < size; i ++)
+        for (int i = 0; i < mLineFeeds.size(); i ++)
         {
-            View view = getChildAt(i);
-            width += view.getMeasuredWidth();
-            if ((width += (getPaddingLeft() + getPaddingRight())) > widthSize)
+            LineFeed lineFeed = mLineFeeds.get(i);
+            List<View> views = lineFeed.mSameLineViews;
+            for (int j = 0; j < views.size(); j ++)
             {
-                height += getMaxHeight(mViews.subList(index, (i==index) ? (i+1) : i));
-                setLayout(mViews.subList(index, (i==index) ? (i+1) : i), height);
-                index = i;
-                width = view.getMeasuredWidth();
+
             }
+        }
+//        int size = getChildCount();
+//        int width = 0, height = 0, index = 0;
+//        count = 0;
+//        for (int i = 0; i < size; i ++)
+//        {
+//            View view = getChildAt(i);
+//            width += view.getMeasuredWidth();
+//            if ((width += (getPaddingLeft() + getPaddingRight())) > widthSize)
+//            {
+//                height += getMaxHeight(mViews.subList(index, (i==index) ? (i+1) : i));
+//                setLayout(mViews.subList(index, (i==index) ? (i+1) : i), height);
+//                index = i;
+//                width = view.getMeasuredWidth();
+//            }
+//        }
+    }
+
+
+    private final class LineFeed
+    {
+        private List<View> mSameLineViews = new ArrayList<>();
+        // 该行所有view中高度最高值
+        private int height;
+        // 当前行中所需要占用的宽度
+        private int lineWidth = getPaddingLeft() + getPaddingRight();
+
+        private void addView(View view)
+        {
+            height = height > view.getMeasuredHeight() ? height : view.getMeasuredHeight();
+            lineWidth += view.getMeasuredWidth();
+            mSameLineViews.add(view);
         }
     }
 
@@ -167,23 +212,23 @@ public class CusViewGroup extends ViewGroup
     }
 
     int index = 0, width = 0, widthSize = 0;
-    private int measureHeight()
-    {
-        int count = mViews.size();
-        int height = 0;
-        for (int i = index; i < count; i++)
-        {
-            View view = mViews.get(i);
-            width += view.getMeasuredWidth();
-            if ((width += (getPaddingLeft() + getPaddingRight())) > widthSize) {
-                height = getMaxHeight(mViews.subList(index, (i==index) ? (i+1) : i));
-                index = i;
-                width = view.getMeasuredWidth();
-                break;
-            }
-        }
-        return height;
-    }
+//    private int measureHeight()
+//    {
+//        int count = mViews.size();
+//        int height = 0;
+//        for (int i = index; i < count; i++)
+//        {
+//            View view = mViews.get(i);
+//            width += view.getMeasuredWidth();
+//            if ((width += (getPaddingLeft() + getPaddingRight())) > widthSize) {
+//                height = getMaxHeight(mViews.subList(index, (i==index) ? (i+1) : i));
+//                index = i;
+//                width = view.getMeasuredWidth();
+//                break;
+//            }
+//        }
+//        return height;
+//    }
 
     private int getMaxHeight(List<View> views)
     {
