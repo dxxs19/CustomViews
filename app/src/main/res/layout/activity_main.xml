@@ -2,6 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,34 +21,46 @@
         android:orientation="horizontal"
         android:visibility="visible">
 
-        <com.wei.customviews.view.widget.CusViewGroup
+        <com.wei.customviews.view.widget.WarpLinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        <com.wei.customviews.view.widget.CusImageView
-            android:id="@+id/imgView1"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/mode2"/>
+            android:padding="10dp"
+            app:grivate="left"
+            app:horizontal_Space="10dp"
+            app:isFull="false"
+            app:vertical_Space="10dp">
 
-        <com.wei.customviews.view.widget.CusImageView
-            android:id="@+id/imgView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/mode2"/>
+            <com.wei.customviews.view.widget.CusImageView
+                android:id="@+id/imgView1"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/mode2"/>
 
-        <com.wei.customviews.view.widget.CusImageView
-            android:id="@+id/imgView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@drawable/mode2"/>
-        </com.wei.customviews.view.widget.CusViewGroup>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="测试布局"/>
+
+            <com.wei.customviews.view.widget.CusImageView
+                android:id="@+id/imgView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/mode2"/>
+
+            <com.wei.customviews.view.widget.CusImageView
+                android:id="@+id/imgView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/mode2"/>
+        </com.wei.customviews.view.widget.WarpLinearLayout>
+
         <com.wei.customviews.view.widget.CusRelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <com.wei.customviews.view.widget.CusImageView
                 android:id="@+id/imgView"
@@ -61,8 +74,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/imgView"
-                android:textSize="18sp"
-                android:layout_centerHorizontal="true"/>
+                android:layout_centerHorizontal="true"
+                android:textSize="18sp"/>
         </com.wei.customviews.view.widget.CusRelativeLayout>
     </com.wei.customviews.view.widget.CusLinearLayout>
 

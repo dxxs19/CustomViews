@@ -5,6 +5,7 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import com.wei.utillibrary.LogUtil;
@@ -50,6 +51,13 @@ public class CusLinearLayout extends LinearLayout
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
+//        int count = getChildCount();
+//        for (int i = 0 ; i < count ; i ++)
+//        {
+//            View view = getChildAt(i);
+//            view.layout(getPaddingLeft(), getPaddingTop() + i * view.getMeasuredHeight(),
+//                    getPaddingLeft() + view.getMeasuredWidth() * (i+1), getPaddingTop() + view.getMeasuredHeight() * (i + 1));
+//        }
     }
 
     @Override
