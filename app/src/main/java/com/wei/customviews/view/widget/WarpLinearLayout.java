@@ -78,6 +78,7 @@ public class WarpLinearLayout extends ViewGroup {
                 break;
 
         }
+
         /**
          * 根据计算出的宽度，计算出所需要的行数
          */
