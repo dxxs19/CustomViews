@@ -2,6 +2,7 @@ package com.wei.customviews.view.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
@@ -71,19 +72,6 @@ public class CusViewGroup extends ViewGroup
     {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CusViewGroup);
         gravity = typedArray.getInt(R.styleable.CusViewGroup_gravity, 1);
-//        String gravityStr = typedArray.getString(R.styleable.CusViewGroup_gravity);
-//        if (gravityStr.equals("left"))
-//        {
-//            gravity = 1;
-//        }
-//        else if (gravityStr.equals("right"))
-//        {
-//            gravity = 0;
-//        }
-//        else
-//        {
-//            gravity = 2;
-//        }
         horizontal_Space = typedArray.getDimension(R.styleable.CusViewGroup_horizontal_spacing, 0);
         vertical_Space = typedArray.getDimension(R.styleable.CusViewGroup_vertical_spacing, 0);
         isFill = typedArray.getBoolean(R.styleable.CusViewGroup_isFill, false);
@@ -243,6 +231,12 @@ public class CusViewGroup extends ViewGroup
             }
             t += lineFeed.height + vertical_Space;
         }
+    }
+
+    // 空方法
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
     }
 
     /**

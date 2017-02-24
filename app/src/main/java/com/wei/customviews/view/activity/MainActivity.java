@@ -42,8 +42,6 @@ public class MainActivity extends BaseActivity
     RecyclerView mRecyclerView;
     @ViewById(R.id.imgView)
     ImageView mImageView;
-    @ViewById(R.id.txtView)
-    TextView mTextView;
     private RecyclerAdapter mRecyclerAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private List<String> mData = new ArrayList<>();
@@ -178,6 +176,7 @@ public class MainActivity extends BaseActivity
     public boolean onTouchEvent(MotionEvent event)
     {
         LogUtil.e(TAG, "--- onTouchEvent(MotionEvent event) ---");
+        Thread.dumpStack();
         switch (event.getAction())
         {
             case MotionEvent.ACTION_DOWN:
@@ -196,7 +195,7 @@ public class MainActivity extends BaseActivity
                 LogUtil.e(TAG, "--- ACTION_CANCEL ---");
                 break;
         }
-        return false;
+        return true;
     }
 
     @Override

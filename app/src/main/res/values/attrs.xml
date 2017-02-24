@@ -17,7 +17,6 @@
             <enum name="left" value="1"></enum>
             <enum name="center" value="2"></enum>
         </attr>
-        <!--<attr name="gravity" format="string"></attr>-->
         <attr name="horizontal_spacing" format="dimension"></attr>
         <attr name="vertical_spacing" format="dimension"></attr>
         <attr name="isFill" format="boolean"></attr>

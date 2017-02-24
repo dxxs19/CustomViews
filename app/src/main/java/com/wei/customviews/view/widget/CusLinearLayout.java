@@ -1,6 +1,7 @@
 package com.wei.customviews.view.widget;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;

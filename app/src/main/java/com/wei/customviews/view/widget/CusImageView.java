@@ -1,17 +1,23 @@
 package com.wei.customviews.view.widget;
 
+import android.animation.AnimatorSet;
+import android.animation.FloatEvaluator;
+import android.animation.IntEvaluator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
 import com.wei.utillibrary.LogUtil;
-
-import static de.greenrobot.event.EventBus.TAG;
 
 /**
  * author: WEI
@@ -57,6 +63,25 @@ public class CusImageView extends ImageView
                 return false;
             }
         });
+
+        ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(this, "scaleX", 0.8f, 1.5f);
+        objectAnimator.setEvaluator(new FloatEvaluator());
+        objectAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        objectAnimator.setRepeatMode(ValueAnimator.REVERSE);
+
+        ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(this, "scaleY", 0.8f, 1.5f);
+        objectAnimator1.setRepeatMode(ValueAnimator.REVERSE);
+        objectAnimator1.setRepeatCount(ValueAnimator.INFINITE);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(
+                objectAnimator,
+                objectAnimator1
+        );
+        animatorSet.setDuration(1500);
+        // 加速减速插值器
+        animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        animatorSet.start();
     }
 
     @Override

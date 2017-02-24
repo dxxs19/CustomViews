@@ -18,9 +18,9 @@
     <com.wei.customviews.view.widget.CusLinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:visibility="visible">
+        android:orientation="horizontal">
 
+        // 自动换行布局
         <com.wei.customviews.view.widget.CusViewGroup
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,13 +28,15 @@
             linefeed:gravity="left"
             linefeed:horizontal_spacing="10dp"
             linefeed:isFill="false"
-            linefeed:vertical_spacing="10dp">
+            linefeed:vertical_spacing="10dp"
+            android:visibility="gone">
 
             <com.wei.customviews.view.widget.CusImageView
                 android:id="@+id/imgView1"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:layout_marginLeft="50dp"
                 android:src="@drawable/mode2"/>
 
             <TextView
@@ -60,7 +62,7 @@
         <com.wei.customviews.view.widget.CusRelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <com.wei.customviews.view.widget.CusImageView
                 android:id="@+id/imgView"
@@ -68,14 +70,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:src="@drawable/mode2"/>
-
-            <TextView
-                android:id="@+id/txtView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/imgView"
-                android:layout_centerHorizontal="true"
-                android:textSize="18sp"/>
         </com.wei.customviews.view.widget.CusRelativeLayout>
     </com.wei.customviews.view.widget.CusLinearLayout>
 
