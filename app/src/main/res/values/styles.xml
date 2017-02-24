@@ -15,4 +15,11 @@
         <item name="isFull">false</item>
     </style>
 
+    <style name="CusViewGroupDefault">
+        <item name="gravity">left</item>
+        <item name="horizontal_spacing">20dp</item>
+        <item name="vertical_spacing">20dp</item>
+        <item name="isFill">false</item>
+    </style>
+
 </resources>
