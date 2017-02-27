@@ -23,6 +23,7 @@ import com.wei.customviews.db.UserContentProvider;
 import com.wei.customviews.db.UserDAO;
 import com.wei.customviews.view.BaseActivity;
 import com.wei.customviews.view.adapter.RecyclerAdapter;
+import com.wei.customviews.view.fragment.SlidingConflictFragment;
 import com.wei.utillibrary.LogUtil;
 
 import org.androidannotations.annotations.AfterViews;
@@ -36,7 +37,7 @@ import static android.R.id.message;
 import static android.R.id.switch_widget;
 
 @EActivity(R.layout.activity_main)
-public class MainActivity extends BaseActivity
+public class MainActivity extends BaseActivity implements SlidingConflictFragment.OnFragmentInteractionListener
 {
     @ViewById(R.id.rc_view)
     RecyclerView mRecyclerView;
@@ -195,7 +196,7 @@ public class MainActivity extends BaseActivity
                 LogUtil.e(TAG, "--- ACTION_CANCEL ---");
                 break;
         }
-        return true;
+        return super.onTouchEvent(event);
     }
 
     @Override
@@ -208,6 +209,11 @@ public class MainActivity extends BaseActivity
     protected void onPause() {
         super.onPause();
         new MyTask().execute("wei");
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 
     class MyTask extends AsyncTask<String, Integer, String>

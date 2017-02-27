@@ -73,10 +73,16 @@ public class CusImageView extends ImageView
         objectAnimator1.setRepeatMode(ValueAnimator.REVERSE);
         objectAnimator1.setRepeatCount(ValueAnimator.INFINITE);
 
+        ObjectAnimator objectAnimator2 = ObjectAnimator.ofInt(this, "rotation", 0, 360);
+        objectAnimator2.setRepeatMode(ValueAnimator.REVERSE);
+        objectAnimator2.setRepeatCount(ValueAnimator.INFINITE);
+//        objectAnimator2.start();
+
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(
                 objectAnimator,
-                objectAnimator1
+                objectAnimator1,
+                objectAnimator2
         );
         animatorSet.setDuration(1500);
         // 加速减速插值器
