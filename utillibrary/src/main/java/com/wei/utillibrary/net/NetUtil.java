@@ -1,4 +1,4 @@
-package com.wei.utillibrary;
+package com.wei.utillibrary.net;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

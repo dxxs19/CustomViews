@@ -1,4 +1,4 @@
-package com.wei.utillibrary;
+package com.wei.utillibrary.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

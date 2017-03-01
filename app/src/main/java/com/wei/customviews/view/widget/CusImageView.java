@@ -2,11 +2,9 @@ package com.wei.customviews.view.widget;
 
 import android.animation.AnimatorSet;
 import android.animation.FloatEvaluator;
-import android.animation.IntEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.graphics.Canvas;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
@@ -14,10 +12,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
-import com.wei.utillibrary.LogUtil;
+import com.wei.utillibrary.utils.LogUtil;
 
 /**
  * author: WEI

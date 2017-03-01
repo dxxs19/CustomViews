@@ -1,4 +1,4 @@
-package com.wei.utillibrary;
+package com.wei.utillibrary.net;
 
 import java.util.regex.Pattern;
 

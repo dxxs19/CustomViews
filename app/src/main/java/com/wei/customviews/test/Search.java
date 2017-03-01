@@ -10,6 +10,8 @@ public class Search extends BaseSort
     public static void main(String[] args) {
         Search search = new Search();
         search.binarySearch();
+
+        System.out.println(new String("abc") == new String("abc"));
     }
 
     private void binarySearch()

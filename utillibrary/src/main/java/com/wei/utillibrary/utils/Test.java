@@ -1,4 +1,4 @@
-package com.wei.utillibrary;
+package com.wei.utillibrary.utils;
 
 /**
  * 代码测试工具类

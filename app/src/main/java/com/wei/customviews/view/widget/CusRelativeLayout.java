@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
 
-import com.wei.utillibrary.LogUtil;
+import com.wei.utillibrary.utils.LogUtil;
 
 /**
  * author: WEI

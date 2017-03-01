@@ -14,6 +14,7 @@ public class BaseSort
         int temp = sortArray[j];
         sortArray[j] = sortArray[i];
         sortArray[i] = temp;
+
     }
 
     protected void outPut(Object target)

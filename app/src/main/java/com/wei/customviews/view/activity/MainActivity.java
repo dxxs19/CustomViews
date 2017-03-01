@@ -16,15 +16,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.wei.customviews.R;
 import com.wei.customviews.db.UserContentProvider;
 import com.wei.customviews.db.UserDAO;
-import com.wei.customviews.view.BaseActivity;
+import com.wei.customviews.view.AppBaseActivity;
 import com.wei.customviews.view.adapter.RecyclerAdapter;
 import com.wei.customviews.view.fragment.SlidingConflictFragment;
-import com.wei.utillibrary.LogUtil;
+import com.wei.utillibrary.utils.LogUtil;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -33,11 +32,8 @@ import org.androidannotations.annotations.ViewById;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.R.id.message;
-import static android.R.id.switch_widget;
-
 @EActivity(R.layout.activity_main)
-public class MainActivity extends BaseActivity implements SlidingConflictFragment.OnFragmentInteractionListener
+public class MainActivity extends AppBaseActivity implements SlidingConflictFragment.OnFragmentInteractionListener
 {
     @ViewById(R.id.rc_view)
     RecyclerView mRecyclerView;
@@ -69,6 +65,23 @@ public class MainActivity extends BaseActivity implements SlidingConflictFragmen
 
         mUserDAO = UserDAO.getInstance(this);
         mContentResolver = getContentResolver();
+
+        downLoadData();
+    }
+
+    private void downLoadData() {
+        mRequestCallback = new AbstractRequestCallback() {
+            @Override
+            public void onSuccess(String content) {
+                Log.e(TAG, "--- Success ---");
+            }
+
+            @Override
+            public void onFail(String errorMsg) {
+                // 需要特殊处理代码，否则不需要重写onFail方法
+//                super.onFail(errorMsg);
+            }
+        };
     }
 
     @Override

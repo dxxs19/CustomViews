@@ -1,4 +1,4 @@
-package com.wei.utillibrary;
+package com.wei.utillibrary.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;

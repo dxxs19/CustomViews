@@ -6,21 +6,14 @@ import android.graphics.Canvas;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.wei.customviews.R;
-import com.wei.utillibrary.LogUtil;
+import com.wei.utillibrary.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.R.attr.gravity;
-import static android.R.attr.width;
-import static com.wei.customviews.R.attr.horizontal_Space;
-import static com.wei.customviews.R.attr.isFull;
 
 /**
  * author: WEI

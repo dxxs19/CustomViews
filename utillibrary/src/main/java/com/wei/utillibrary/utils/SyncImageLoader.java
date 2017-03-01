@@ -1,7 +1,7 @@
 /**
  * 异步加载图片类
  */
-package com.wei.utillibrary;
+package com.wei.utillibrary.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -17,6 +17,7 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.utils.StorageUtils;
+import com.wei.utillibrary.R;
 
 import java.io.File;
 

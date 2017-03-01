@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.wei.utillibrary;
+package com.wei.utillibrary.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

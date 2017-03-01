@@ -1,15 +1,13 @@
 package com.wei.customviews.view.widget;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.LinearLayout;
 
-import com.wei.utillibrary.LogUtil;
+import com.wei.utillibrary.utils.LogUtil;
 
 /**
  * author: WEI

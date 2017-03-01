@@ -1,4 +1,4 @@
-package com.wei.utillibrary;
+package com.wei.utillibrary.utils;
 
 import android.annotation.SuppressLint;
 import android.view.View;

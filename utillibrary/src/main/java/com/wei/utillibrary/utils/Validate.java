@@ -1,4 +1,4 @@
-package com.wei.utillibrary;
+package com.wei.utillibrary.utils;
 
 import android.text.Editable;
 import android.text.InputFilter;
