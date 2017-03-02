@@ -1,4 +1,4 @@
-package com.wei.customviews;
+package com.wei.customviews.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

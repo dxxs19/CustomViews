@@ -10,7 +10,6 @@ import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -25,7 +24,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
-import com.wei.customviews.Book;
+import com.wei.customviews.model.Book;
 import com.wei.customviews.IBookManager;
 import com.wei.customviews.R;
 import com.wei.customviews.db.UserContentProvider;
@@ -42,8 +41,6 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.R.id.list;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends AppBaseActivity implements SlidingConflictFragment.OnFragmentInteractionListener

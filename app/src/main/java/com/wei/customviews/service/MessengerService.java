@@ -10,7 +10,7 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 
-import com.wei.customviews.Book;
+import com.wei.customviews.model.Book;
 import com.wei.customviews.IBookManager;
 import com.wei.utillibrary.utils.LogUtil;
 

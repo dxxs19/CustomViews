@@ -1,6 +1,6 @@
 // IBookManager.aidl
 package com.wei.customviews;
-import com.wei.customviews.Book;
+import com.wei.customviews.model.Book;
 
 // Declare any non-default types here with import statements
 
