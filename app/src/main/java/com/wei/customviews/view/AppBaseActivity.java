@@ -2,6 +2,7 @@ package com.wei.customviews.view;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Messenger;
 import android.os.PersistableBundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;

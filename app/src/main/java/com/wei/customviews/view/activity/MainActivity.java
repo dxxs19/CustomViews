@@ -1,13 +1,21 @@
 package com.wei.customviews.view.activity;
 
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,9 +25,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
+import com.wei.customviews.Book;
+import com.wei.customviews.IBookManager;
 import com.wei.customviews.R;
 import com.wei.customviews.db.UserContentProvider;
 import com.wei.customviews.db.UserDAO;
+import com.wei.customviews.service.MessengerService;
 import com.wei.customviews.view.AppBaseActivity;
 import com.wei.customviews.view.adapter.RecyclerAdapter;
 import com.wei.customviews.view.fragment.SlidingConflictFragment;
@@ -31,6 +42,8 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.R.id.list;
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends AppBaseActivity implements SlidingConflictFragment.OnFragmentInteractionListener
@@ -44,6 +57,7 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
     private List<String> mData = new ArrayList<>();
     private UserDAO mUserDAO;
     private ContentResolver mContentResolver;
+    private Messenger mService;
 
     @AfterViews
     void initView()
@@ -67,6 +81,63 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
         mContentResolver = getContentResolver();
 
         downLoadData();
+
+        bindService(new Intent(this, MessengerService.class), mConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+//            mService = new Messenger(service);
+//            Message message = Message.obtain(null, MessengerService.MSG_FROM_CLIENT);
+//            Bundle data = new Bundle();
+//            data.putString("msg", "Hello, this is client.");
+//            message.setData(data);
+//
+//            // 通过该行代码把messenger传递给服务端，这时服务端才能向客户端发送消息
+//            message.replyTo = mGetReplyMessenger;
+//
+//            try {
+//                mService.send(message);
+//            } catch (RemoteException e) {
+//                e.printStackTrace();
+//            }
+
+            IBookManager iBookManager = IBookManager.Stub.asInterface(service);
+            try {
+                List<Book> books = iBookManager.getBookList();
+                LogUtil.e(TAG, "query book list, list type:" + books.getClass().getCanonicalName());
+                LogUtil.e(TAG, "query book list:" + books.toString());
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
+
+    private Messenger mGetReplyMessenger = new Messenger(new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what)
+            {
+                case MessengerService.MSG_FROM_SERVICE:
+                    LogUtil.e(TAG, "receive msg from service:" + msg.getData().getString("reply"));
+                    break;
+                default:
+                    super.handleMessage(msg);
+            }
+        }
+    });
+
+    @Override
+    protected void onDestroy() {
+        unbindService(mConnection);
+        super.onDestroy();
     }
 
     private void downLoadData() {
