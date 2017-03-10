@@ -1,6 +1,7 @@
 // IBookManager.aidl
 package com.wei.customviews;
 import com.wei.customviews.model.Book;
+import com.wei.customviews.IOnNewBookArrivedListener;
 
 // Declare any non-default types here with import statements
 
@@ -14,5 +15,6 @@ interface IBookManager {
 
       List<Book> getBookList();
       void addBook(in Book book);
-
+      void registerListener(IOnNewBookArrivedListener listener);
+      void unregisterListener(IOnNewBookArrivedListener listener);
 }

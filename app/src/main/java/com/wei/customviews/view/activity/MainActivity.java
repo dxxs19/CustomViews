@@ -24,12 +24,16 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
+import com.wei.customviews.IOnNewBookArrivedListener;
 import com.wei.customviews.model.Book;
 import com.wei.customviews.IBookManager;
 import com.wei.customviews.R;
 import com.wei.customviews.db.UserContentProvider;
 import com.wei.customviews.db.UserDAO;
 import com.wei.customviews.service.MessengerService;
+import com.wei.customviews.test.designmode.SMSObserver;
+import com.wei.customviews.test.designmode.Student;
+import com.wei.customviews.test.designmode.Teacher;
 import com.wei.customviews.view.AppBaseActivity;
 import com.wei.customviews.view.adapter.RecyclerAdapter;
 import com.wei.customviews.view.fragment.SlidingConflictFragment;
@@ -55,6 +59,7 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
     private UserDAO mUserDAO;
     private ContentResolver mContentResolver;
     private Messenger mService;
+    private IBookManager mRemoteBookManager;
 
     @AfterViews
     void initView()
@@ -101,10 +106,15 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
 //            }
 
             IBookManager iBookManager = IBookManager.Stub.asInterface(service);
+            mRemoteBookManager = iBookManager;
             try {
                 List<Book> books = iBookManager.getBookList();
-                LogUtil.e(TAG, "query book list, list type:" + books.getClass().getCanonicalName());
                 LogUtil.e(TAG, "query book list:" + books.toString());
+                Book book = new Book(3, "Android 开发艺术探索");
+                iBookManager.addBook(book);
+                List<Book> newBooks = iBookManager.getBookList();
+                LogUtil.e(TAG, "query book list:" + newBooks.toString());
+                iBookManager.registerListener(mIOnNewBookArrivedListener);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -112,7 +122,22 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
+            mRemoteBookManager = null;
+            LogUtil.e(TAG, "binder died.");
+        }
+    };
 
+    private IOnNewBookArrivedListener mIOnNewBookArrivedListener = new IOnNewBookArrivedListener.Stub()
+    {
+
+        @Override
+        public void basicTypes(int anInt, long aLong, boolean aBoolean, float aFloat, double aDouble, String aString) throws RemoteException {
+
+        }
+
+        @Override
+        public void onNewBookArrived(Book newBook) throws RemoteException {
+            mHandler.obtainMessage(MESSAGE_NEWBOOK_ARRIVED, newBook).sendToTarget();
         }
     };
 
@@ -125,6 +150,7 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
                 case MessengerService.MSG_FROM_SERVICE:
                     LogUtil.e(TAG, "receive msg from service:" + msg.getData().getString("reply"));
                     break;
+
                 default:
                     super.handleMessage(msg);
             }
@@ -133,6 +159,15 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
 
     @Override
     protected void onDestroy() {
+        if (mRemoteBookManager != null && mRemoteBookManager.asBinder().isBinderAlive())
+        {
+            LogUtil.e(TAG, "unregister listener:" + mIOnNewBookArrivedListener);
+            try {
+                mRemoteBookManager.unregisterListener(mIOnNewBookArrivedListener);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
         unbindService(mConnection);
         super.onDestroy();
     }
@@ -237,18 +272,53 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
 
 //        mHandler.obtainMessage();
 //        mHandler.sendEmptyMessage(UPDATE);
+        observer();
+    }
+
+    private void observer()
+    {
+        // 被观察的角色
+//        Teacher teacher = new Teacher();
+//
+//        // 观察者
+//        Student student1 = new Student("wei", "男");
+//        Student student2 = new Student("Maggie", "女");
+//        Student student3 = new Student("Sora", "女");
+//
+//        // 将观察者注册到可观察对象的观察者列表中
+//        teacher.addObserver(student1);
+//        teacher.addObserver(student2);
+//        teacher.addObserver(student3);
+//
+//        // 发布消息
+//        teacher.publishHomework("画出几何代数中的数轴！");
+
+        getContentResolver().registerContentObserver(Uri.parse("content://sms"), true, new SMSObserver(new Handler(){
+            @Override
+            public void handleMessage(Message msg)
+            {
+                super.handleMessage(msg);
+                LogUtil.e(TAG, msg.what + ", " + msg.obj + ", " + msg.toString());
+            }
+        }));
     }
 
     private final int UPDATE = 0x011;
+    private final int MESSAGE_NEWBOOK_ARRIVED = 0x022;
     Handler mHandler = new Handler()
     {
         @Override
         public void handleMessage(Message msg)
         {
-            if (msg.what == UPDATE)
+            switch (msg.what)
             {
-                mImageView.setImageResource(R.mipmap.ic_launcher);
-//                mTextView.setText(msg.what + "");
+                case UPDATE:
+                    mImageView.setImageResource(R.mipmap.ic_launcher);
+                    break;
+
+                case MESSAGE_NEWBOOK_ARRIVED:
+                    LogUtil.e(TAG, "receive new book:" + msg.obj);
+                    break;
             }
             super.handleMessage(msg);
         }
@@ -289,7 +359,7 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
     @Override
     protected void onPause() {
         super.onPause();
-        new MyTask().execute("wei");
+//        new MyTask().execute("wei");
     }
 
     @Override

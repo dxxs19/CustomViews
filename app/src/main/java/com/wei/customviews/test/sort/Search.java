@@ -1,4 +1,4 @@
-package com.wei.customviews.test;
+package com.wei.customviews.test.sort;
 
 /**
  * author: WEI
