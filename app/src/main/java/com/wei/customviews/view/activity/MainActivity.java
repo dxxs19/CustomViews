@@ -37,6 +37,7 @@ import com.wei.customviews.test.designmode.Teacher;
 import com.wei.customviews.view.AppBaseActivity;
 import com.wei.customviews.view.adapter.RecyclerAdapter;
 import com.wei.customviews.view.fragment.SlidingConflictFragment;
+import com.wei.customviews.view.viewinterface.BookViewInterface;
 import com.wei.utillibrary.utils.LogUtil;
 
 import org.androidannotations.annotations.AfterViews;
@@ -47,7 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @EActivity(R.layout.activity_main)
-public class MainActivity extends AppBaseActivity implements SlidingConflictFragment.OnFragmentInteractionListener
+public class MainActivity extends AppBaseActivity implements SlidingConflictFragment.OnFragmentInteractionListener, BookViewInterface
 {
     @ViewById(R.id.rc_view)
     RecyclerView mRecyclerView;
@@ -365,6 +366,24 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void showBooks(List<Book> books) {
+        for (Book book:books)
+        {
+            LogUtil.e(TAG, book.bookName);
+        }
+    }
+
+    @Override
+    public void showLoading() {
+        LogUtil.e(TAG, "--- showLoading ---");
+    }
+
+    @Override
+    public void hideLoading() {
+        LogUtil.e(TAG, "--- hideLoading ---");
     }
 
     class MyTask extends AsyncTask<String, Integer, String>
