@@ -1,7 +1,6 @@
 package com.wei.customviews.view.viewinterface;
 
 import com.wei.customviews.model.Book;
-import com.wei.customviews.test.designmode.Student;
 
 import java.util.List;
 

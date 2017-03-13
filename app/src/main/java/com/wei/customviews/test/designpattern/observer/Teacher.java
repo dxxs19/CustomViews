@@ -1,4 +1,4 @@
-package com.wei.customviews.test.designmode;
+package com.wei.customviews.test.designpattern.observer;
 
 import java.util.Observable;
 
