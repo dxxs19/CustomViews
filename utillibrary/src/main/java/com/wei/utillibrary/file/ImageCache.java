@@ -1,4 +1,4 @@
-package com.wei.utillibrary.utils;
+package com.wei.utillibrary.file;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.os.StatFs;
 
 import com.wei.utillibrary.constant.ImageConstant;
+import com.wei.utillibrary.utils.ImageUtil;
 
 import java.io.File;
 import java.io.FileInputStream;

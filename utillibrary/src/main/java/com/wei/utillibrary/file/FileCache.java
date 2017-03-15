@@ -1,4 +1,4 @@
-package com.wei.utillibrary.utils;
+package com.wei.utillibrary.file;
 
 /**
  * author: WEI

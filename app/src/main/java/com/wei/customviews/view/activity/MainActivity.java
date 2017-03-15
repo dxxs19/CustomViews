@@ -10,6 +10,7 @@ import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -36,6 +37,7 @@ import com.wei.customviews.view.AppBaseActivity;
 import com.wei.customviews.view.adapter.RecyclerAdapter;
 import com.wei.customviews.view.fragment.SlidingConflictFragment;
 import com.wei.customviews.view.viewinterface.BookViewInterface;
+import com.wei.utillibrary.net.MultiThreadDownload;
 import com.wei.utillibrary.utils.LogUtil;
 
 import org.androidannotations.annotations.AfterViews;
@@ -272,6 +274,18 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
 //        mHandler.obtainMessage();
 //        mHandler.sendEmptyMessage(UPDATE);
         observer();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                new MultiThreadDownload.Builder()
+                        .url("http://imtt.dd.qq.com/16891/690F18B3B4043DFFEED739F70AEF4B2C.apk?fsname=com.wei.game2048_V1.0.4_5.apk&csr=1bbd")
+                        .threadSize(5)
+                        .fileName("2048.apk")
+                        .localDir(Environment.getExternalStorageDirectory() + "/aaa")
+                        .create()
+                        .download();
+            }
+        }).start();
     }
 
     private void observer()

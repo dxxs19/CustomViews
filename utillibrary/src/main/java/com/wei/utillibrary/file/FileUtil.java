@@ -1,7 +1,8 @@
-package com.wei.utillibrary.utils;
+package com.wei.utillibrary.file;
 
 import android.content.Context;
 import android.os.Environment;
+import android.text.TextUtils;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -200,5 +201,54 @@ public class FileUtil {
 			}
 		}
 		return filename;
+	}
+
+	/**
+	 * 根据给定路径获取文件名称
+	 * @param path
+	 * @return
+	 */
+	public static String getFileName(String path)
+	{
+		String fileName = "";
+		if (!TextUtils.isEmpty(path) && path.contains("/"))
+		{
+			fileName = path.substring(path.lastIndexOf('/') + 1);
+		}
+		return fileName;
+	}
+
+	public static File getSaveFile(String localDir, String fileName)
+	{
+		String filePath = "";
+		if (TextUtils.isEmpty(localDir))
+		{
+			if (isSDCardAvailable())
+			{
+				String rootPath = Environment.getExternalStorageDirectory().getPath() + "/download";
+				if (rootPath.lastIndexOf('/') < rootPath.length()-1)
+				{
+					filePath = rootPath + File.separator + fileName;
+				}
+				else
+				{
+					filePath = rootPath + fileName;
+				}
+			}
+		}
+		else
+		{
+			if (localDir.lastIndexOf('/') < localDir.length() - 1)
+				localDir += '/';
+			filePath = localDir + File.separator + fileName;
+		}
+
+		File file = new File(filePath);
+		File dir = new File(file.getParent());
+		if (!dir.exists())
+		{
+			dir.mkdirs();
+		}
+		return file;
 	}
 }
