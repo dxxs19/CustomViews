@@ -1,7 +1,6 @@
 package com.wei.utillibrary.net;
 
 import android.content.Context;
-import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -14,8 +13,9 @@ import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
+import java.text.DecimalFormat;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 多线程下载
@@ -31,7 +31,9 @@ public class MultiThreadDownload
     private String mUrl;
     private String mLocalDir;
     private String mFileName;
-    private int mThreadSize;
+    private int mThreadSize, mFinishThread, fileLength;
+    private int mHasDownloadLength;
+    private long startTime;
 
     public MultiThreadDownload(Builder builder)
     {
@@ -54,7 +56,7 @@ public class MultiThreadDownload
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setRequestMethod("GET");
             httpURLConnection.setConnectTimeout(5000);
-            int fileLength = httpURLConnection.getContentLength();
+            fileLength = httpURLConnection.getContentLength();
             String fileName = TextUtils.isEmpty(mFileName) ? FileUtil.getFileName(mUrl) : mFileName;
             File saveFile = FileUtil.getSaveFile(mLocalDir, fileName);
             RandomAccessFile randomAccessFile = new RandomAccessFile(saveFile, "rwd");
@@ -62,9 +64,11 @@ public class MultiThreadDownload
             randomAccessFile.close();
             int block = fileLength%mThreadSize == 0 ? fileLength/mThreadSize : fileLength/mThreadSize + 1;
             Log.e(TAG, "fileLength = " + fileLength + ", fileName = " + fileName + ", saveFilePath = " + saveFile.getPath() + ", block = " + block);
+            startTime = System.currentTimeMillis();
             for (int i = 0; i < mThreadSize; i ++)
             {
-                new DownloadThread(url, saveFile, block, i).start();
+                DownloadThread downloadThread = new DownloadThread(url, saveFile, block, i);
+                new Thread(downloadThread).start();
             }
 
         } catch (MalformedURLException e) {
@@ -74,7 +78,7 @@ public class MultiThreadDownload
         }
     }
 
-    class DownloadThread extends Thread
+    class DownloadThread implements Runnable
     {
         private final String TAG = getClass().getSimpleName();
         private URL mUrl;
@@ -101,16 +105,29 @@ public class MultiThreadDownload
                 httpURLConnection.setRequestMethod("GET");
                 httpURLConnection.setConnectTimeout(5000);
                 httpURLConnection.setRequestProperty("Range", "bytes=" + startPosition + "-" + endPosition);
+
                 InputStream inputStream = httpURLConnection.getInputStream();
-                byte[] buffer = new byte[1024];
+                byte[] buffer = new byte[2048];
                 int length;
-                while ( (length = inputStream.read(buffer)) != -1)
-                {
+                while ((length = inputStream.read(buffer)) != -1) {
                     randomAccessFile.write(buffer, 0, length);
+                    mHasDownloadLength += length;
+
+                    DecimalFormat decimalFormat = new DecimalFormat(".00");
+                    float percent = (float) mHasDownloadLength / fileLength * 100;
+                    String percentStr = decimalFormat.format(percent);
+                    Log.e(TAG, "已下载：" + mHasDownloadLength + ", 即：" + percentStr + "%");
                 }
                 inputStream.close();
                 randomAccessFile.close();
+                mFinishThread ++;
                 Log.e(TAG, "线程" + mThreadId + "下载完成！");
+                if (mHasDownloadLength == fileLength || mFinishThread == mThreadSize)
+                {
+                    long endTime = System.currentTimeMillis();
+                    long duration = endTime - startTime;
+                    Log.e(TAG, mThreadSize + "条线程耗时：" + duration + "毫秒,约：" + duration / 1000 + "秒！");
+                }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {

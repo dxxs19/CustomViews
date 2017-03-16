@@ -1,5 +1,6 @@
 package com.wei.customviews.view.activity;
 
+import android.app.DownloadManager;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -267,6 +268,7 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
     }
 
     private int count = 10;
+    private String url = "http://imtt.dd.qq.com/16891/F7175C88B72B1691ECB9036C9479BD07.apk?fsname=com.tmall.wireless_5.30.3_1582.apk&csr=1bbd";
     @Override
     protected void onResume() {
         super.onResume();
@@ -278,14 +280,17 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
             @Override
             public void run() {
                 new MultiThreadDownload.Builder()
-                        .url("http://imtt.dd.qq.com/16891/690F18B3B4043DFFEED739F70AEF4B2C.apk?fsname=com.wei.game2048_V1.0.4_5.apk&csr=1bbd")
+                        .url(url)
                         .threadSize(5)
-                        .fileName("2048.apk")
+                        .fileName("天猫.apk")
                         .localDir(Environment.getExternalStorageDirectory() + "/aaa")
                         .create()
                         .download();
             }
         }).start();
+
+//        DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+//        downloadManager.
     }
 
     private void observer()
