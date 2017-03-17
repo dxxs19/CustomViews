@@ -1,9 +1,14 @@
 package com.wei.utillibrary.net;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.RemoteViews;
 
+import com.wei.utillibrary.R;
 import com.wei.utillibrary.file.FileUtil;
 
 import java.io.File;
@@ -15,6 +20,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -23,10 +30,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  * date: 2017/3/15
  */
 
-public class MultiThreadDownload
+public class MultiThreadDownload implements OnLoadingListener
 {
     private final String TAG = getClass().getSimpleName();
-    private static MultiThreadDownload mMultiThreadDownload;
+    private final int NOTIFY_ID = 100;
+    private OnLoadingListener mLoadingListener;
     private Context mContext;
     private String mUrl;
     private String mLocalDir;
@@ -37,10 +45,29 @@ public class MultiThreadDownload
 
     public MultiThreadDownload(Builder builder)
     {
+        mContext = builder.mContext;
         mUrl = builder.url;
         mLocalDir = builder.localDir;
         mFileName = builder.fileName;
         mThreadSize = builder.threadSize;
+        mLoadingListener = builder.mLoadingListener;
+        initNotification();
+    }
+
+    NotificationManager mNotificationManager;
+    Notification mNotification;
+    RemoteViews mRemoteViews;
+    private void initNotification()
+    {
+        mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotification = new Notification(R.drawable.ic_launcher, "开始下载", System.currentTimeMillis());
+        mRemoteViews = new RemoteViews(mContext.getPackageName(), R.layout.notification_progress);
+        mRemoteViews.setTextViewText(R.id.download_filename, "正在下载...");
+        mRemoteViews.setTextViewText(R.id.download_progress, "0%");
+        mRemoteViews.setProgressBar(R.id.down_load_progress, 100, 0, false);
+        mNotification.contentView = mRemoteViews;
+
+        mNotificationManager.notify(NOTIFY_ID, mNotification);
     }
 
     public void download()
@@ -70,7 +97,6 @@ public class MultiThreadDownload
                 DownloadThread downloadThread = new DownloadThread(url, saveFile, block, i);
                 new Thread(downloadThread).start();
             }
-
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -112,11 +138,7 @@ public class MultiThreadDownload
                 while ((length = inputStream.read(buffer)) != -1) {
                     randomAccessFile.write(buffer, 0, length);
                     mHasDownloadLength += length;
-
-                    DecimalFormat decimalFormat = new DecimalFormat(".00");
-                    float percent = (float) mHasDownloadLength / fileLength * 100;
-                    String percentStr = decimalFormat.format(percent);
-                    Log.e(TAG, "已下载：" + mHasDownloadLength + ", 即：" + percentStr + "%");
+                    onLoading(fileLength, mHasDownloadLength);
                 }
                 inputStream.close();
                 randomAccessFile.close();
@@ -127,21 +149,72 @@ public class MultiThreadDownload
                     long endTime = System.currentTimeMillis();
                     long duration = endTime - startTime;
                     Log.e(TAG, mThreadSize + "条线程耗时：" + duration + "毫秒,约：" + duration / 1000 + "秒！");
+                    onSuccess();
                 }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (Exception e) {
+                onFailure(e.getMessage());
                 e.printStackTrace();
             }
         }
     }
 
+
+    @Override
+    public void onSuccess()
+    {
+        if (mLoadingListener != null)
+        {
+            mLoadingListener.onSuccess();
+        }
+        mRemoteViews.setTextViewText(R.id.download_filename, "下载完成");
+        mRemoteViews.setTextViewText(R.id.download_progress, "100%");
+        mRemoteViews.setProgressBar(R.id.down_load_progress, 100, 100, false);
+        mNotificationManager.notify(NOTIFY_ID, mNotification);
+    }
+
+    @Override
+    public void onFailure(String errorMsg)
+    {
+        if (mLoadingListener != null)
+        {
+            mLoadingListener.onFailure(errorMsg);
+        }
+    }
+
+    private long lastPutTime;
+
+    @Override
+    public void onLoading(float total, float current)
+    {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastPutTime >= 1000)
+        {
+            lastPutTime = currentTime;
+            if (mLoadingListener != null) {
+                mLoadingListener.onLoading(total, current);
+            }
+
+            DecimalFormat decimalFormat = new DecimalFormat("0.00");
+            float percent = current / total * 100;
+            String percentStr = decimalFormat.format(percent);
+            mRemoteViews.setTextViewText(R.id.download_progress, percentStr + "%");
+            mRemoteViews.setProgressBar(R.id.down_load_progress, 100, (int) Float.parseFloat(percentStr), false);
+            mNotificationManager.notify(NOTIFY_ID, mNotification);
+        }
+    }
+
     public static class Builder
     {
+        private Context mContext;
         private String url;
         private String localDir;
         private String fileName;
         private int threadSize;
+        private OnLoadingListener mLoadingListener;
+
+        public Builder(Context context) {
+            mContext = context;
+        }
 
         public Builder url(String url)
         {
@@ -164,6 +237,12 @@ public class MultiThreadDownload
         public Builder threadSize(int threadSize)
         {
             this.threadSize = threadSize;
+            return this;
+        }
+
+        public Builder setOnLoadingListener(OnLoadingListener loadingListener)
+        {
+            this.mLoadingListener = loadingListener;
             return this;
         }
 

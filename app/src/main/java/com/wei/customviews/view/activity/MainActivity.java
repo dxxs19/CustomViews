@@ -32,6 +32,7 @@ import com.wei.customviews.IBookManager;
 import com.wei.customviews.R;
 import com.wei.customviews.db.UserContentProvider;
 import com.wei.customviews.db.UserDAO;
+import com.wei.customviews.service.DownloadService;
 import com.wei.customviews.service.MessengerService;
 import com.wei.customviews.test.designpattern.observer.SMSObserver;
 import com.wei.customviews.view.AppBaseActivity;
@@ -39,12 +40,14 @@ import com.wei.customviews.view.adapter.RecyclerAdapter;
 import com.wei.customviews.view.fragment.SlidingConflictFragment;
 import com.wei.customviews.view.viewinterface.BookViewInterface;
 import com.wei.utillibrary.net.MultiThreadDownload;
+import com.wei.utillibrary.net.OnLoadingListener;
 import com.wei.utillibrary.utils.LogUtil;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -276,21 +279,39 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
 //        mHandler.obtainMessage();
 //        mHandler.sendEmptyMessage(UPDATE);
         observer();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                new MultiThreadDownload.Builder()
-                        .url(url)
-                        .threadSize(5)
-                        .fileName("天猫.apk")
-                        .localDir(Environment.getExternalStorageDirectory() + "/aaa")
-                        .create()
-                        .download();
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                new MultiThreadDownload.Builder(MainActivity.this)
+//                        .url(url)
+//                        .threadSize(5)
+//                        .fileName("天猫.apk")
+//                        .localDir(Environment.getExternalStorageDirectory() + "/aaa")
+//                        .setOnLoadingListener(new OnLoadingListener() {
+//                            @Override
+//                            public void onSuccess() {
+//                                Log.e(TAG, "下载成功！");
+//                            }
+//
+//                            @Override
+//                            public void onFailure(String errorMsg) {
+//                                Log.e(TAG, "下载失败！" + errorMsg);
+//                            }
+//
+//                            @Override
+//                            public void onLoading(float total, float current) {
+//                                DecimalFormat decimalFormat = new DecimalFormat("0.00");
+//                                float percent = current / total * 100;
+//                                String percentStr = decimalFormat.format(percent);
+//                                Log.e(TAG, "已下载：" + current + ", 即：" + percentStr + "%");
+//                            }
+//                        })
+//                        .create()
+//                        .download();
+//            }
+//        }).start();
 
-//        DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-//        downloadManager.
+        DownloadService.startActionFoo(this, url, "天猫.apk");
     }
 
     private void observer()
