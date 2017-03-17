@@ -2,8 +2,10 @@ package com.wei.utillibrary.net;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -38,10 +40,14 @@ public class MultiThreadDownload implements OnLoadingListener
     private Context mContext;
     private String mUrl;
     private String mLocalDir;
-    private String mFileName;
+    private String mFileName, mFilePath;
     private int mThreadSize, mFinishThread, fileLength;
     private int mHasDownloadLength;
     private long startTime;
+
+    NotificationManager mNotificationManager;
+    Notification mNotification;
+    RemoteViews mRemoteViews;
 
     public MultiThreadDownload(Builder builder)
     {
@@ -54,9 +60,6 @@ public class MultiThreadDownload implements OnLoadingListener
         initNotification();
     }
 
-    NotificationManager mNotificationManager;
-    Notification mNotification;
-    RemoteViews mRemoteViews;
     private void initNotification()
     {
         mNotificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -66,7 +69,7 @@ public class MultiThreadDownload implements OnLoadingListener
         mRemoteViews.setTextViewText(R.id.download_progress, "0%");
         mRemoteViews.setProgressBar(R.id.down_load_progress, 100, 0, false);
         mNotification.contentView = mRemoteViews;
-
+        mNotification.flags = Notification.FLAG_AUTO_CANCEL;
         mNotificationManager.notify(NOTIFY_ID, mNotification);
     }
 
@@ -86,6 +89,16 @@ public class MultiThreadDownload implements OnLoadingListener
             fileLength = httpURLConnection.getContentLength();
             String fileName = TextUtils.isEmpty(mFileName) ? FileUtil.getFileName(mUrl) : mFileName;
             File saveFile = FileUtil.getSaveFile(mLocalDir, fileName);
+            mFilePath = saveFile.getPath();
+
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if (fileName.endsWith(".apk")) {
+                intent.setDataAndType(Uri.fromFile(new File(mFilePath)), "application/vnd.android.package-archive");
+            }
+            PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            mNotification.contentIntent = pendingIntent;
+
             RandomAccessFile randomAccessFile = new RandomAccessFile(saveFile, "rwd");
             randomAccessFile.setLength(fileLength);
             randomAccessFile.close();

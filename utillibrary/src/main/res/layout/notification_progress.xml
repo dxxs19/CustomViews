@@ -4,6 +4,7 @@
               android:layout_height="fill_parent"
               android:background="#00000000"
               android:orientation="horizontal"
+              android:id="@+id/ll_notice_item"
               android:padding="5dp" >
 
     <ImageView
