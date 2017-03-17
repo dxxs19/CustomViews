@@ -98,6 +98,7 @@ public class DownloadService extends IntentService {
                     @Override
                     public void onSuccess() {
                         Log.e(TAG, "下载成功！");
+                        stopSelf();
                     }
 
                     @Override

@@ -41,13 +41,14 @@ public class MultiThreadDownload implements OnLoadingListener
     private String mUrl;
     private String mLocalDir;
     private String mFileName, mFilePath;
-    private int mThreadSize, mFinishThread, fileLength;
+    private int mThreadSize = 2, mFinishThread, fileLength;
     private int mHasDownloadLength;
     private long startTime;
 
     NotificationManager mNotificationManager;
     Notification mNotification;
     RemoteViews mRemoteViews;
+    DownloadThread[] mDownloadThreads;
 
     public MultiThreadDownload(Builder builder)
     {
@@ -55,7 +56,8 @@ public class MultiThreadDownload implements OnLoadingListener
         mUrl = builder.url;
         mLocalDir = builder.localDir;
         mFileName = builder.fileName;
-        mThreadSize = builder.threadSize;
+        mThreadSize = builder.threadSize >= 0 ? builder.threadSize : 2;
+        mDownloadThreads = new DownloadThread[mThreadSize];
         mLoadingListener = builder.mLoadingListener;
         initNotification();
     }
@@ -109,6 +111,7 @@ public class MultiThreadDownload implements OnLoadingListener
             {
                 DownloadThread downloadThread = new DownloadThread(url, saveFile, block, i);
                 new Thread(downloadThread).start();
+                mDownloadThreads[i] = downloadThread;
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
