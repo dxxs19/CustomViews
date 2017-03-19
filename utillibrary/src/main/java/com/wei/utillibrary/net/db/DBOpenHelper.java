@@ -12,6 +12,15 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBOpenHelper extends SQLiteOpenHelper
 {
+    public static final String TABLE_NAME = "downloadInfos_table";
+    private final String CREATE_TABLE_SQL = "Create table " + TABLE_NAME
+            + "(id integer primary key autoincrement, "
+            + "download_length real,"
+            + "total_length real,"
+//            + "download_percent real,"
+            + "thread_id integer,"
+            + "download_url text)";
+
     public DBOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
@@ -22,7 +31,7 @@ public class DBOpenHelper extends SQLiteOpenHelper
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
+        db.execSQL(CREATE_TABLE_SQL);
     }
 
     @Override
