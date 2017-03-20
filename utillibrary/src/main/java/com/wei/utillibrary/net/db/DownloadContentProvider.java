@@ -24,7 +24,6 @@ public class DownloadContentProvider extends ContentProvider
     private static final int UPDATE_CODE = 3;
     private static final int QUERYALL_BYURL_CODE = 4;
     private DBOpenHelper mOpenHelper;
-    private static Context mContext;
     private static DownloadContentProvider sDownloadContentProvider;
 
     static {
@@ -34,30 +33,10 @@ public class DownloadContentProvider extends ContentProvider
         URI_MATCHER.addURI(AUTHORITY, "download/queryByUrl", QUERYALL_BYURL_CODE);
     }
 
-    public DownloadContentProvider(Context context)
-    {
-        mContext = context;
-    }
-
-    public static DownloadContentProvider getInstance(Context context)
-    {
-        if (null == sDownloadContentProvider)
-        {
-            synchronized (DownloadContentProvider.class)
-            {
-                if (null == sDownloadContentProvider)
-                {
-                    sDownloadContentProvider = new DownloadContentProvider(context);
-                }
-            }
-        }
-        return sDownloadContentProvider;
-    }
-
     @Override
     public boolean onCreate() {
         // TODO: Implement this to initialize your content provider on startup.
-        mOpenHelper = new DBOpenHelper(mContext, DB_NAME, null, 1);
+        mOpenHelper = new DBOpenHelper(getContext(), DB_NAME, null, 1);
         return false;
     }
 
@@ -96,9 +75,9 @@ public class DownloadContentProvider extends ContentProvider
                 if (database.isOpen())
                 {
                     long id = database.insert(DBOpenHelper.TABLE_NAME, null, values);
-                    database.close();
+//                    database.close();
                     Uri resultUri = ContentUris.withAppendedId(uri, id);
-                    Log.e(TAG, "resultUri = " + resultUri.toString());
+//                    Log.e(TAG, "resultUri = " + resultUri.toString());
                     return resultUri;
                 }
                 break;
@@ -121,7 +100,8 @@ public class DownloadContentProvider extends ContentProvider
                 }
                 break;
         }
-        throw new UnsupportedOperationException("Not yet implemented");
+//        throw new UnsupportedOperationException("Not yet implemented");
+        return null;
     }
 
     @Override
@@ -135,7 +115,7 @@ public class DownloadContentProvider extends ContentProvider
                 if (database.isOpen())
                 {
                     int updateCount = database.update(DBOpenHelper.TABLE_NAME, values, selection, selectionArgs);
-                    database.close();
+//                    database.close();
                     return updateCount;
                 }
                 break;

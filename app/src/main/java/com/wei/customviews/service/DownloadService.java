@@ -111,7 +111,7 @@ public class DownloadService extends IntentService {
                         DecimalFormat decimalFormat = new DecimalFormat("0.00");
                         float percent = current / total * 100;
                         String percentStr = decimalFormat.format(percent);
-                        Log.e(TAG, "已下载：" + current + ", 即：" + percentStr + "%");
+//                        Log.e(TAG, "已下载：" + current + ", 即：" + percentStr + "%");
                     }
                 })
                 .create()

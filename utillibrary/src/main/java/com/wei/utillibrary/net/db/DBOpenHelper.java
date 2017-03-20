@@ -17,7 +17,7 @@ public class DBOpenHelper extends SQLiteOpenHelper
             + "(id integer primary key autoincrement, "
             + "download_length real,"
             + "total_length real,"
-//            + "download_percent real,"
+            + "download_percent real,"
             + "thread_id integer,"
             + "download_url text)";
 
