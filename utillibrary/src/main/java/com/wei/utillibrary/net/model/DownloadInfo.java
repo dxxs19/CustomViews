@@ -14,7 +14,7 @@ public class DownloadInfo
 //    download_url text)";
     private int id, thread_id;
     private float download_length, total_length, download_percent;
-    private String download_url;
+    private String download_url, save_path;
 
     public int getId() {
         return id;
@@ -62,5 +62,13 @@ public class DownloadInfo
 
     public void setDownload_url(String download_url) {
         this.download_url = download_url;
+    }
+
+    public String getSave_path() {
+        return save_path;
+    }
+
+    public void setSave_path(String save_path) {
+        this.save_path = save_path;
     }
 }

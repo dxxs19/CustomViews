@@ -19,6 +19,7 @@ public class DBOpenHelper extends SQLiteOpenHelper
             + "total_length real,"
             + "download_percent real,"
             + "thread_id integer,"
+            + "save_path text,"
             + "download_url text)";
 
     public DBOpenHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {

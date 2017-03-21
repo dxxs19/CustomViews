@@ -9,9 +9,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import com.wei.utillibrary.R;
 import com.wei.utillibrary.file.FileUtil;
@@ -47,7 +49,6 @@ public class MultiThreadDownload implements OnLoadingListener {
     private int mHasDownloadLength;
     private float percent = 0;
     private long startTime, lastTime = 0;
-    ;
 
     NotificationManager mNotificationManager;
     Notification mNotification;
@@ -66,6 +67,7 @@ public class MultiThreadDownload implements OnLoadingListener {
         mLoadingListener = builder.mLoadingListener;
         mResolver = mContext.getContentResolver();
         initNotification();
+        initData();
     }
 
     private void initNotification() {
@@ -74,29 +76,6 @@ public class MultiThreadDownload implements OnLoadingListener {
         mRemoteViews = new RemoteViews(mContext.getPackageName(), R.layout.notification_progress);
         mRemoteViews.setTextViewText(R.id.download_filename, "正在下载...");
         mRemoteViews.setTextViewText(R.id.download_progress, "0%");
-
-        Uri uri = Uri.parse(DownloadContentProvider.CONTENT_URI + "/download/queryByUrl");
-        Cursor cursor = mResolver.query(uri, new String[]{"download_length", "total_length",
-                        "download_percent", "thread_id"}, " download_url =?", new String[]{mUrl},
-                "thread_id");
-        if (cursor.moveToFirst()) {
-            DownloadInfo downloadInfo;
-            mDownloadInfos = new ArrayList<>();
-            do {
-                downloadInfo = new DownloadInfo();
-                percent = cursor.getFloat(2);
-                float download_length = cursor.getColumnIndex("download_length");
-                float total_length = cursor.getColumnIndex("total_length");
-//                float download_percent = cursor.getColumnIndex("download_percent");
-                int thread_id = cursor.getColumnIndex("thread_id");
-                downloadInfo.setDownload_length(download_length);
-                downloadInfo.setTotal_length(total_length);
-                downloadInfo.setDownload_percent(percent);
-                downloadInfo.setThread_id(thread_id);
-                mDownloadInfos.add(downloadInfo);
-            } while (cursor.moveToNext());
-        }
-
         mRemoteViews.setProgressBar(R.id.down_load_progress, 100, 0, false);
         mNotification.contentView = mRemoteViews;
         mNotification.flags = Notification.FLAG_AUTO_CANCEL;
@@ -115,6 +94,10 @@ public class MultiThreadDownload implements OnLoadingListener {
             httpURLConnection.setRequestMethod("GET");
             httpURLConnection.setConnectTimeout(5000);
             fileLength = httpURLConnection.getContentLength();
+            if (fileLength <= 0) {
+                Toast.makeText(mContext, "请检查网络是否正常连接，且下载链接正确！", Toast.LENGTH_SHORT).show();
+                return;
+            }
             String fileName = TextUtils.isEmpty(mFileName) ? FileUtil.getFileName(mUrl) : mFileName;
             File saveFile = FileUtil.getSaveFile(mLocalDir, fileName);
             mFilePath = saveFile.getPath();
@@ -134,6 +117,7 @@ public class MultiThreadDownload implements OnLoadingListener {
             Log.e(TAG, "fileLength = " + fileLength + ", fileName = " + fileName + ", saveFilePath = " + saveFile.getPath() + ", block = " + block);
             startTime = System.currentTimeMillis();
             mHasDownloadLength = (int) (fileLength * percent);
+            Log.e(TAG, "mHasDownloadLength = " + mHasDownloadLength + ", percent = " + percent);
             for (int i = 0; i < mThreadSize; i++) {
                 DownloadThread downloadThread = new DownloadThread(url, saveFile, block, i);
                 new Thread(downloadThread).start();
@@ -143,6 +127,47 @@ public class MultiThreadDownload implements OnLoadingListener {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void initData()
+    {
+        Uri uri = Uri.parse(DownloadContentProvider.CONTENT_URI + "/download/queryByUrl");
+        Cursor cursor = mResolver.query(uri, new String[]{"download_length", "total_length",
+                        "download_percent", "thread_id", "save_path"}, " download_url =?", new String[]{mUrl},
+                "thread_id");
+        if (cursor.moveToFirst())
+        {
+            DownloadInfo downloadInfo;
+            mDownloadInfos = new ArrayList<>();
+            do {
+                downloadInfo = new DownloadInfo();
+                float download_length = cursor.getFloat(0);
+                float total_length = cursor.getFloat(1);
+                float download_percent = cursor.getFloat(2);
+                int thread_id = cursor.getInt(3);
+                String save_path = cursor.getString(cursor.getColumnIndex("save_path"));
+                downloadInfo.setDownload_length(download_length);
+                downloadInfo.setTotal_length(total_length);
+                downloadInfo.setDownload_percent(download_percent);
+                downloadInfo.setThread_id(thread_id);
+                downloadInfo.setSave_path(save_path);
+                mDownloadInfos.add(downloadInfo);
+            } while (cursor.moveToNext());
+        }
+
+        if (null != mDownloadInfos)
+        {
+            percent = mDownloadInfos.get(0).getDownload_percent();
+            for (int i = 1, size = mDownloadInfos.size(); i < size; i ++)
+            {
+                float temp = mDownloadInfos.get(i).getDownload_percent();
+                if ( temp > percent)
+                {
+                    percent = temp;
+                }
+            }
+            Log.e(TAG, "percent = " + percent);
         }
     }
 
@@ -183,6 +208,8 @@ public class MultiThreadDownload implements OnLoadingListener {
                 httpURLConnection.setConnectTimeout(5000);
                 httpURLConnection.setRequestProperty("Range", "bytes=" + startPosition + "-" + endPosition);
 
+                Log.e(TAG, "线程" + mThreadId + "：" + "bytes=" + startPosition + "-" + endPosition);
+
                 InputStream inputStream = httpURLConnection.getInputStream();
                 byte[] buffer = new byte[2048];
                 int length;
@@ -216,28 +243,31 @@ public class MultiThreadDownload implements OnLoadingListener {
     }
 
     private void updateDb(int startPosition, int endPosition, int threadId) {
-        Log.e(TAG, "线程" + threadId + " : " + startPosition + ", " + endPosition);
         Cursor cursor = mResolver.query(Uri.parse(DownloadContentProvider.CONTENT_URI + "/download/queryByUrl"),
                 new String[]{"download_length", "total_length", "download_percent"},
                 " thread_id =?", new String[]{threadId + ""}, "thread_id");
-        if (cursor.moveToFirst())
-        {
+        DecimalFormat decimalFormat = new DecimalFormat("0.00");
+        float percent = (float) mHasDownloadLength / fileLength;
+        String percentStr = decimalFormat.format(percent);
+        float percentFloat = Float.parseFloat(percentStr);
+//        Log.e(TAG, "线程" + threadId + " : " + startPosition + ", " + endPosition + ", " + percent
+//                + ", " + percentFloat);
+        if (cursor.moveToFirst()) {
             ContentValues contentValues = new ContentValues();
             contentValues.put("download_length", startPosition);
-            contentValues.put("download_percent", (float)mHasDownloadLength / fileLength);
+            contentValues.put("download_percent", percentFloat);
             // 更新数据
             mResolver.update(Uri.parse(DownloadContentProvider.CONTENT_URI + "/download/update"),
-                    contentValues, " thread_id =?",
-                    new String[]{threadId + ""});
-        }
-        else
-        {
+                    contentValues, " thread_id =? and download_url =?",
+                    new String[]{threadId + "", mUrl});
+        } else {
             ContentValues contentValues = new ContentValues();
             contentValues.put("download_length", startPosition);
             contentValues.put("total_length", endPosition);
-            contentValues.put("download_percent", (float)mHasDownloadLength / fileLength);
+            contentValues.put("download_percent", percentFloat);
             contentValues.put("thread_id", threadId);
             contentValues.put("download_url", mUrl);
+            contentValues.put("save_path", mFilePath);
             // 插数据
             mResolver.insert(Uri.parse(DownloadContentProvider.CONTENT_URI + "/download/insert"), contentValues);
         }
