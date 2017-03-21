@@ -271,47 +271,15 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
     }
 
     private int count = 10;
-    private String url = "http://imtt.dd.qq.com/16891/F7175C88B72B1691ECB9036C9479BD07.apk?fsname=com.tmall.wireless_5.30.3_1582.apk&csr=1bbd";
+    private String url1 = "http://imtt.dd.qq.com/16891/F7175C88B72B1691ECB9036C9479BD07.apk?fsname=com.tmall.wireless_5.30.3_1582.apk&csr=1bbd";
+    private String url2 = "http://imtt.dd.qq.com/16891/F7175C88B72B1691ECB9036C9479BD07.apk?fsname=com.tmall.wireless_5.30.3_1582.apk&csr=1bbd";
     @Override
     protected void onResume() {
         super.onResume();
-
 //        mHandler.obtainMessage();
 //        mHandler.sendEmptyMessage(UPDATE);
         observer();
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                new MultiThreadDownload.Builder(MainActivity.this)
-//                        .url(url)
-//                        .threadSize(5)
-//                        .fileName("天猫.apk")
-//                        .localDir(Environment.getExternalStorageDirectory() + "/aaa")
-//                        .setOnLoadingListener(new OnLoadingListener() {
-//                            @Override
-//                            public void onSuccess() {
-//                                Log.e(TAG, "下载成功！");
-//                            }
-//
-//                            @Override
-//                            public void onFailure(String errorMsg) {
-//                                Log.e(TAG, "下载失败！" + errorMsg);
-//                            }
-//
-//                            @Override
-//                            public void onLoading(float total, float current) {
-//                                DecimalFormat decimalFormat = new DecimalFormat("0.00");
-//                                float percent = current / total * 100;
-//                                String percentStr = decimalFormat.format(percent);
-//                                Log.e(TAG, "已下载：" + current + ", 即：" + percentStr + "%");
-//                            }
-//                        })
-//                        .create()
-//                        .download();
-//            }
-//        }).start();
-
-        DownloadService.startActionFoo(this, url, "天猫.apk");
+        DownloadService.startActionFoo(this, url1, "天猫.apk");
     }
 
     private void observer()

@@ -63,6 +63,7 @@ public class DownloadService extends IntentService {
         intent.setAction(ACTION_BAZ);
         intent.putExtra(EXTRA_PARAM1, param1);
         intent.putExtra(EXTRA_PARAM2, param2);
+        mContext = context;
         context.startService(intent);
     }
 

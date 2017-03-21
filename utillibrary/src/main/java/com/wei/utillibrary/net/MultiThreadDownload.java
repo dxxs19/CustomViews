@@ -302,6 +302,10 @@ public class MultiThreadDownload implements OnLoadingListener {
 
         DecimalFormat decimalFormat = new DecimalFormat("0.00");
         float percent = current / total * 100;
+        if (percent >= 100)
+        {
+            percent = 100.00f;
+        }
         String percentStr = decimalFormat.format(percent);
         mRemoteViews.setTextViewText(R.id.download_progress, percentStr + "%");
         mRemoteViews.setProgressBar(R.id.down_load_progress, 100, (int) Float.parseFloat(percentStr), false);
