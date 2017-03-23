@@ -29,12 +29,17 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
+import com.wei.customviews.IComputeInterface;
 import com.wei.customviews.IOnNewBookArrivedListener;
+import com.wei.customviews.ISecurityCenterInterface;
 import com.wei.customviews.model.Book;
 import com.wei.customviews.IBookManager;
 import com.wei.customviews.R;
 import com.wei.customviews.db.UserContentProvider;
 import com.wei.customviews.db.UserDAO;
+import com.wei.customviews.model.modelImpl.ComputeImpl;
+import com.wei.customviews.model.modelImpl.SecurityCenterImpl;
+import com.wei.customviews.service.BinderPool;
 import com.wei.customviews.service.DownloadService;
 import com.wei.customviews.service.MessengerService;
 import com.wei.customviews.test.designpattern.observer.SMSObserver;
@@ -94,6 +99,38 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
 
 //        bindService(new Intent(this, MessengerService.class), mConnection, Context.BIND_AUTO_CREATE);
         bindIPCService();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                doWork();
+            }
+        }).start();
+    }
+
+    ISecurityCenterInterface mSecurityCenterInterface;
+    IComputeInterface mComputeInterface;
+    private void doWork() {
+        BinderPool binderPool = BinderPool.getInstance(this);
+        IBinder securityBinder = binderPool.queryBinder(BinderPool.BINDER_SECURITY_CENTER);
+        mSecurityCenterInterface = SecurityCenterImpl.asInterface(securityBinder);
+        Log.e(TAG, "visit ISecurityCenter");
+        String msg = "Hello Android!";
+        try {
+            String password = mSecurityCenterInterface.encrypt(msg);
+            Log.e(TAG, "encrypt : " + password);
+            Log.e(TAG, "decrypt : " + mSecurityCenterInterface.decrypt(password));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        Log.e(TAG, "visit ICompute");
+        IBinder computeBinder = binderPool.queryBinder(BinderPool.BINDER_COMPUTE);
+        mComputeInterface = ComputeImpl.asInterface(computeBinder);
+        try {
+            Log.e(TAG, " 3 + 5 = " + mComputeInterface.add(3, 5));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     private void bindIPCService()
@@ -195,7 +232,7 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
                 e.printStackTrace();
             }
         }
-        unbindService(mConnection);
+//        unbindService(mConnection);
         super.onDestroy();
     }
 
@@ -299,7 +336,7 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
 //        mHandler.obtainMessage();
 //        mHandler.sendEmptyMessage(UPDATE);
         observer();
-        DownloadService.startActionFoo(this, url, "天猫.apk");
+//        DownloadService.startActionFoo(this, url, "天猫.apk");
     }
 
     private void observer()
