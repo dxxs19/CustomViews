@@ -24,6 +24,7 @@ public class DownloadContentProvider extends ContentProvider
     private static final int UPDATE_CODE = 3;
     private static final int QUERYALL_BYURL_CODE = 4;
     private DBOpenHelper mOpenHelper;
+    private SQLiteDatabase database;
     private static DownloadContentProvider sDownloadContentProvider;
 
     static {
@@ -37,6 +38,7 @@ public class DownloadContentProvider extends ContentProvider
     public boolean onCreate() {
         // TODO: Implement this to initialize your content provider on startup.
         mOpenHelper = new DBOpenHelper(getContext(), DB_NAME, null, 1);
+        database = mOpenHelper.getWritableDatabase();
         return false;
     }
 
@@ -46,11 +48,10 @@ public class DownloadContentProvider extends ContentProvider
         switch (URI_MATCHER.match(uri))
         {
             case DELETEALL_BYURL_CODE:
-                SQLiteDatabase database = mOpenHelper.getWritableDatabase();
                 if (database.isOpen())
                 {
                     int deleteCount = database.delete(DBOpenHelper.TABLE_NAME, selection, selectionArgs);
-                    database.close();
+//                    database.close();
                     return deleteCount;
                 }
                 break;
@@ -71,7 +72,6 @@ public class DownloadContentProvider extends ContentProvider
         switch (URI_MATCHER.match(uri))
         {
             case INSERT_CODE:
-                SQLiteDatabase database = mOpenHelper.getWritableDatabase();
                 if (database.isOpen())
                 {
                     long id = database.insert(DBOpenHelper.TABLE_NAME, null, values);
@@ -92,7 +92,6 @@ public class DownloadContentProvider extends ContentProvider
         switch (URI_MATCHER.match(uri))
         {
             case QUERYALL_BYURL_CODE:
-                SQLiteDatabase database = mOpenHelper.getReadableDatabase();
                 if (database.isOpen())
                 {
                     Cursor cursor = database.query(DBOpenHelper.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
@@ -111,7 +110,6 @@ public class DownloadContentProvider extends ContentProvider
         switch (URI_MATCHER.match(uri))
         {
             case UPDATE_CODE:
-                SQLiteDatabase database = mOpenHelper.getWritableDatabase();
                 if (database.isOpen())
                 {
                     int updateCount = database.update(DBOpenHelper.TABLE_NAME, values, selection, selectionArgs);

@@ -113,8 +113,8 @@ public class MessengerService extends Service
 
     @Override
     public IBinder onBind(Intent intent) {
-//        return mMessenger.getBinder();
-        return mBinder;
+        return mMessenger.getBinder();
+//        return mBinder;
     }
 
     @Override

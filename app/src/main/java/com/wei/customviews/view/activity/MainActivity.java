@@ -8,9 +8,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
@@ -89,40 +92,59 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
 
         downLoadData();
 
-        bindService(new Intent(this, MessengerService.class), mConnection, Context.BIND_AUTO_CREATE);
+//        bindService(new Intent(this, MessengerService.class), mConnection, Context.BIND_AUTO_CREATE);
+        bindIPCService();
+    }
+
+    private void bindIPCService()
+    {
+        Intent intent = new Intent();
+        intent.setAction("com.wei.action.IPC_MESSAGE");
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        PackageManager packageManager = getPackageManager();
+        ResolveInfo resolveInfo = packageManager.resolveService(intent, 0);
+        if (resolveInfo != null)
+        {
+            String pkName = resolveInfo.serviceInfo.packageName;
+            String serviceName = resolveInfo.serviceInfo.name;
+            Log.e(TAG, "packageName : " + pkName + ", serviceName : " + serviceName);
+            ComponentName componentName = new ComponentName(pkName, serviceName);
+            intent.setComponent(componentName);
+            bindService(intent, mConnection, BIND_AUTO_CREATE);
+        }
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-//            mService = new Messenger(service);
-//            Message message = Message.obtain(null, MessengerService.MSG_FROM_CLIENT);
-//            Bundle data = new Bundle();
-//            data.putString("msg", "Hello, this is client.");
-//            message.setData(data);
-//
-//            // 通过该行代码把messenger传递给服务端，这时服务端才能向客户端发送消息
-//            message.replyTo = mGetReplyMessenger;
-//
-//            try {
-//                mService.send(message);
-//            } catch (RemoteException e) {
-//                e.printStackTrace();
-//            }
+            mService = new Messenger(service);
+            Message message = Message.obtain(null, MessengerService.MSG_FROM_CLIENT);
+            Bundle data = new Bundle();
+            data.putString("msg", "Hello, this is client.");
+            message.setData(data);
 
-            IBookManager iBookManager = IBookManager.Stub.asInterface(service);
-            mRemoteBookManager = iBookManager;
+            // 通过该行代码把messenger传递给服务端，这时服务端才能向客户端发送消息
+            message.replyTo = mGetReplyMessenger;
+
             try {
-                List<Book> books = iBookManager.getBookList();
-                LogUtil.e(TAG, "query book list:" + books.toString());
-                Book book = new Book(3, "Android 开发艺术探索");
-                iBookManager.addBook(book);
-                List<Book> newBooks = iBookManager.getBookList();
-                LogUtil.e(TAG, "query book list:" + newBooks.toString());
-                iBookManager.registerListener(mIOnNewBookArrivedListener);
+                mService.send(message);
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
+
+//            IBookManager iBookManager = IBookManager.Stub.asInterface(service);
+//            mRemoteBookManager = iBookManager;
+//            try {
+//                List<Book> books = iBookManager.getBookList();
+//                LogUtil.e(TAG, "query book list:" + books.toString());
+//                Book book = new Book(3, "Android 开发艺术探索");
+//                iBookManager.addBook(book);
+//                List<Book> newBooks = iBookManager.getBookList();
+//                LogUtil.e(TAG, "query book list:" + newBooks.toString());
+//                iBookManager.registerListener(mIOnNewBookArrivedListener);
+//            } catch (RemoteException e) {
+//                e.printStackTrace();
+//            }
         }
 
         @Override
@@ -270,16 +292,14 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
         LogUtil.e(TAG, "插入的id:" + id);
     }
 
-    private int count = 10;
-    private String url1 = "http://imtt.dd.qq.com/16891/F7175C88B72B1691ECB9036C9479BD07.apk?fsname=com.tmall.wireless_5.30.3_1582.apk&csr=1bbd";
-    private String url2 = "http://imtt.dd.qq.com/16891/F7175C88B72B1691ECB9036C9479BD07.apk?fsname=com.tmall.wireless_5.30.3_1582.apk&csr=1bbd";
+    private String url = "http://imtt.dd.qq.com/16891/F7175C88B72B1691ECB9036C9479BD07.apk?fsname=com.tmall.wireless_5.30.3_1582.apk&csr=1bbd";
     @Override
     protected void onResume() {
         super.onResume();
 //        mHandler.obtainMessage();
 //        mHandler.sendEmptyMessage(UPDATE);
         observer();
-        DownloadService.startActionFoo(this, url1, "天猫.apk");
+        DownloadService.startActionFoo(this, url, "天猫.apk");
     }
 
     private void observer()

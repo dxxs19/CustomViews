@@ -156,6 +156,8 @@ public class MultiThreadDownload implements OnLoadingListener {
             } while (cursor.moveToNext());
         }
 
+        cursor.close();
+
         if (null != mDownloadInfos)
         {
             percent = mDownloadInfos.get(0).getDownload_percent();
@@ -271,6 +273,7 @@ public class MultiThreadDownload implements OnLoadingListener {
             // 插数据
             mResolver.insert(Uri.parse(DownloadContentProvider.CONTENT_URI + "/download/insert"), contentValues);
         }
+        cursor.close();
     }
 
 
