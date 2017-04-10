@@ -11,10 +11,15 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.Scroller;
 
+import com.nineoldandroids.view.ViewHelper;
 import com.wei.utillibrary.utils.LogUtil;
+
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
 
 /**
  * author: WEI
@@ -35,16 +40,16 @@ public class CusImageView extends ImageView
 
     public CusImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initView();
+        initView(context);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public CusImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        initView();
+        initView(context);
     }
 
-    void initView()
+    void initView(Context context)
     {
         setOnClickListener(new OnClickListener() {
             @Override
@@ -84,13 +89,21 @@ public class CusImageView extends ImageView
         animatorSet.setDuration(1500);
         // 加速减速插值器
         animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
-        animatorSet.start();
+//        animatorSet.start();
+
+        mScroller = new Scroller(context);
     }
 
+    int mLastX, mLastY;
     @Override
     public boolean onTouchEvent(MotionEvent event)
     {
         LogUtil.e(TAG, "--- onTouchEvent(MotionEvent event) ---");
+        int x = (int) event.getRawX();
+        int y = (int) event.getRawY();
+
+//        smoothScrollTo(200, 800);
+
         switch (event.getAction())
         {
             case MotionEvent.ACTION_DOWN:
@@ -99,6 +112,12 @@ public class CusImageView extends ImageView
 
             case MotionEvent.ACTION_MOVE:
                 LogUtil.e(TAG, "--- ACTION_MOVE ---");
+                int deltaX = x - mLastX;
+                int deltaY = y - mLastY;
+//                int translationX = (int) (ViewHelper.getTranslationX(this) + deltaX);
+//                int translationY = (int) (ViewHelper.getTranslationY(this) + deltaY);
+//                ViewHelper.setTranslationX(this, translationX);
+//                ViewHelper.setTranslationY(this, translationY);
                 break;
 
             case MotionEvent.ACTION_UP:
@@ -109,10 +128,34 @@ public class CusImageView extends ImageView
                 LogUtil.e(TAG, "--- ACTION_CANCEL ---");
                 break;
         }
+
+        mLastX = x;
+        mLastY = y;
         // 1.返回false或super.onTouchEvent(event)，自己不消耗事件，向上传播；
         // 2.返回true，自己消耗事件。activity的dispatchTouchEvent及所有上层的dispatchTouchEvent还有onInterceptTouchEvent及
         //   自己的dispatchTouchEvent还有onTouchEvent都会被调用；
-        return super.onTouchEvent(event);
+//        return super.onTouchEvent(event);
+        return true;
+    }
+
+    private void smoothScrollTo(int destX, int destY)
+    {
+        int scrollX = getScrollX();
+        int scrollY = getScrollY();
+        int deltaX = destX - scrollX;
+        int deltaY = destY - scrollY;
+        mScroller.startScroll(scrollX, 0, deltaX, 0, 3000);
+        invalidate();
+    }
+
+    Scroller mScroller = null;
+    @Override
+    public void computeScroll() {
+        if (mScroller.computeScrollOffset())
+        {
+            scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
+            postInvalidate();
+        }
     }
 
     @Override

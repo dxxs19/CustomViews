@@ -50,13 +50,6 @@ public class CusLinearLayout extends LinearLayout
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-//        int count = getChildCount();
-//        for (int i = 0 ; i < count ; i ++)
-//        {
-//            View view = getChildAt(i);
-//            view.layout(getPaddingLeft(), getPaddingTop() + i * view.getMeasuredHeight(),
-//                    getPaddingLeft() + view.getMeasuredWidth() * (i+1), getPaddingTop() + view.getMeasuredHeight() * (i + 1));
-//        }
     }
 
     @Override
@@ -84,16 +77,18 @@ public class CusLinearLayout extends LinearLayout
         // 1.返回false或super.onTouchEvent(event)，自己不消耗事件，向上传播；
         // 2.返回true，自己消耗事件。activity的dispatchTouchEvent及所有上层的dispatchTouchEvent还有onInterceptTouchEvent及
         //   自己的dispatchTouchEvent还有onTouchEvent都会被调用；
-        return super.onTouchEvent(event);
+//        return super.onTouchEvent(event);
+        return true;
     }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         LogUtil.e(TAG, "--- dispatchTouchEvent(MotionEvent ev) ---");
         // 1.返回false表示事件不再向下分发，onInterceptTouchEvent及onTouchEvent也不会被调用。事件向上传递；
-        // 2.返回true，则onInterceptTouchEvent及onTouchEvent不会被调用，上层的onTouchEvent也不会被调用
-        // 3.返回super.dispatchTouchEvent(ev)，则事件继续向下分发，事件由自己的onTouchEvent决定是否处理；
+        // 2.返回true，则onInterceptTouchEvent及onTouchEvent不会被调用，上层的onTouchEvent也不会被调用,无意义
+        // 3.返回super.dispatchTouchEvent(ev)，则事件继续向下分发，事件由自己的onTouchEvent决定是否处理，一般返回这个；
         return super.dispatchTouchEvent(ev);
+//        return false;
     }
 
     @Override
@@ -101,6 +96,7 @@ public class CusLinearLayout extends LinearLayout
         LogUtil.e(TAG, "--- onInterceptTouchEvent(MotionEvent ev) ---");
         // 1.返回true表示拦截事件由自己的onTouchEvent处理。能不能处理由onTouchEvent的返回值决定；
         // 2.返回false或super.onInterceptTouchEvent(ev)表示不拦截事件，继续向下传播
-        return super.onInterceptTouchEvent(ev);
+//        return super.onInterceptTouchEvent(ev);
+        return true;
     }
 }

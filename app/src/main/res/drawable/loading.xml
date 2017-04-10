@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+       android:shape="ring"
+       android:thickness="2dp"
+       android:useLevel="false">
+    <gradient
+        android:centerColor="#30ffffff"
+        android:endColor="@android:color/white"
+        android:gradientRadius="20dp"
+        android:startColor="@android:color/transparent"
+        android:type="sweep"/>
+    <size
+        android:width="40dp"
+        android:height="40dp"/>
+</shape>
+
+    <!--作者：知乎用户-->
+    <!--链接：https://www.zhihu.com/question/37929529/answer/81304862-->
+    <!--来源：知乎-->
+    <!--著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。-->

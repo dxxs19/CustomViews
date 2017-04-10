@@ -1,5 +1,6 @@
 package com.wei.customviews.view.activity;
 
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.ComponentName;
 import android.content.ContentResolver;
@@ -16,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
@@ -392,7 +394,7 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
     public boolean onTouchEvent(MotionEvent event)
     {
         LogUtil.e(TAG, "--- onTouchEvent(MotionEvent event) ---");
-        Thread.dumpStack();
+//        Thread.dumpStack();
         switch (event.getAction())
         {
             case MotionEvent.ACTION_DOWN:
