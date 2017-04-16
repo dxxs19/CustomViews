@@ -39,7 +39,7 @@ import java.util.List;
 
 public class MultiThreadDownload implements OnLoadingListener {
     private final String TAG = getClass().getSimpleName();
-    private final int NOTIFY_ID = 100;
+    private int NOTIFY_ID = 0;
     private OnLoadingListener mLoadingListener;
     private Context mContext;
     private String mUrl;
@@ -60,6 +60,7 @@ public class MultiThreadDownload implements OnLoadingListener {
     public MultiThreadDownload(Builder builder) {
         mContext = builder.mContext;
         mUrl = builder.url;
+        NOTIFY_ID = builder.notifyId;
         mLocalDir = builder.localDir;
         mFileName = builder.fileName;
         mThreadSize = builder.threadSize >= 0 ? builder.threadSize : 2;
@@ -320,7 +321,7 @@ public class MultiThreadDownload implements OnLoadingListener {
         private String url;
         private String localDir;
         private String fileName;
-        private int threadSize;
+        private int threadSize, notifyId;
         private OnLoadingListener mLoadingListener;
 
         public Builder(Context context) {
@@ -329,6 +330,12 @@ public class MultiThreadDownload implements OnLoadingListener {
 
         public Builder url(String url) {
             this.url = url;
+            return this;
+        }
+
+
+        public Builder notifyId(int notifyId) {
+            this.notifyId = notifyId;
             return this;
         }
 
@@ -355,6 +362,7 @@ public class MultiThreadDownload implements OnLoadingListener {
         public MultiThreadDownload create() {
             return new MultiThreadDownload(this);
         }
+
     }
 
 }

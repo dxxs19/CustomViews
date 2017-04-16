@@ -42,11 +42,12 @@ public class DownloadService extends IntentService {
      * @see IntentService
      */
     // TODO: Customize helper method
-    public static void startActionFoo(Context context, String param1, String param2) {
+    public static void startActionFoo(Context context, String param1, String param2, int notifyId) {
         Intent intent = new Intent(context, DownloadService.class);
         intent.setAction(ACTION_FOO);
         intent.putExtra(EXTRA_PARAM1, param1);
         intent.putExtra(EXTRA_PARAM2, param2);
+        intent.putExtra("notify_id", notifyId);
         mContext = context;
         context.startService(intent);
     }
@@ -74,7 +75,8 @@ public class DownloadService extends IntentService {
             if (ACTION_FOO.equals(action)) {
                 final String param1 = intent.getStringExtra(EXTRA_PARAM1);
                 final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionFoo(param1, param2);
+                int notifyId = intent.getIntExtra("notify_id", 0);
+                handleActionFoo(param1, param2, notifyId);
             } else if (ACTION_BAZ.equals(action)) {
                 final String param1 = intent.getStringExtra(EXTRA_PARAM1);
                 final String param2 = intent.getStringExtra(EXTRA_PARAM2);
@@ -87,11 +89,12 @@ public class DownloadService extends IntentService {
      * Handle action Foo in the provided background thread with the provided
      * parameters.
      */
-    private void handleActionFoo(String url, String fileName) {
+    private void handleActionFoo(String url, String fileName, int notifyId) {
         // TODO: Handle action Foo
 //        throw new UnsupportedOperationException("Not yet implemented");
         new MultiThreadDownload.Builder(mContext)
                 .url(url)
+                .notifyId(notifyId)
                 .threadSize(5)
                 .fileName(fileName)
                 .localDir(Environment.getExternalStorageDirectory() + "/aaa")

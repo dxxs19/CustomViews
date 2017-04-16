@@ -331,14 +331,20 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
         LogUtil.e(TAG, "插入的id:" + id);
     }
 
-    private String url = "http://imtt.dd.qq.com/16891/F7175C88B72B1691ECB9036C9479BD07.apk?fsname=com.tmall.wireless_5.30.3_1582.apk&csr=1bbd";
+    private String url = "http://imtt.dd.qq.com/16891/83BED463469515748C7324A1A49938D6.apk?fsname=com.wei.multicheck_1.0.0_1.apk&csr=1bbd";
+    private String url2 = "http://imtt.dd.qq.com/16891/2149FDEB2935A9301F59F784E6E63859.apk?fsname=com.wei.autolinkwifi_1.0.1_2.apk&csr=1bbd";
+    String urls[] = new String[]{url, url2};
     @Override
     protected void onResume() {
         super.onResume();
 //        mHandler.obtainMessage();
 //        mHandler.sendEmptyMessage(UPDATE);
         observer();
-//        DownloadService.startActionFoo(this, url, "天猫.apk");
+
+        for (int i = 0; i < urls.length; i ++)
+        {
+            DownloadService.startActionFoo(this, urls[i], i + ".apk", i);
+        }
     }
 
     private void observer()

@@ -5,7 +5,7 @@ package com.wei.utillibrary.net;
  * date: 2017/3/1
  */
 
-public class URLData
+class URLData
 {
     private String key;
     private long expires;
