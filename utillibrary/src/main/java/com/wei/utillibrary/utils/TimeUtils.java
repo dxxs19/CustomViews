@@ -136,6 +136,11 @@ public class TimeUtils {
 //    }
     
     /////////////////////////////
+    public static String getDay(long time) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        return format.format(new Date(time));
+    }
+
     public static String getTime(long time) {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		return format.format(new Date(time));

@@ -34,6 +34,7 @@ import android.widget.ImageView;
 import com.wei.customviews.IComputeInterface;
 import com.wei.customviews.IOnNewBookArrivedListener;
 import com.wei.customviews.ISecurityCenterInterface;
+import com.wei.customviews.db.AppAdvsDao;
 import com.wei.customviews.model.Book;
 import com.wei.customviews.IBookManager;
 import com.wei.customviews.R;
@@ -72,6 +73,7 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
     private RecyclerView.LayoutManager mLayoutManager;
     private List<String> mData = new ArrayList<>();
     private UserDAO mUserDAO;
+    private AppAdvsDao mAppAdvsDao;
     private ContentResolver mContentResolver;
     private Messenger mService;
     private IBookManager mRemoteBookManager;
@@ -94,9 +96,10 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
         mRecyclerAdapter = new RecyclerAdapter(mData);
         mRecyclerView.setAdapter(mRecyclerAdapter);
 
-        mUserDAO = UserDAO.getInstance(this);
-        mContentResolver = getContentResolver();
+//        mUserDAO = UserDAO.getInstance(this);
+//        mContentResolver = getContentResolver();
 
+        mAppAdvsDao = AppAdvsDao.getInstance(this);
         downLoadData();
 
 //        bindService(new Intent(this, MessengerService.class), mConnection, Context.BIND_AUTO_CREATE);
@@ -108,6 +111,10 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
                 doWork();
             }
         }).start();
+
+        String cacheDir = getCacheDir().getPath();
+        String externalCacheDir = getExternalCacheDir().getPath();
+        Log.e(TAG, "cacheDir = " + cacheDir + ", externalCacheDir = " + externalCacheDir);
     }
 
     ISecurityCenterInterface mSecurityCenterInterface;
@@ -341,10 +348,10 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
 //        mHandler.sendEmptyMessage(UPDATE);
         observer();
 
-        for (int i = 0; i < urls.length; i ++)
-        {
-            DownloadService.startActionFoo(this, urls[i], i + ".apk", i);
-        }
+//        for (int i = 0; i < urls.length; i ++)
+//        {
+//            DownloadService.startActionFoo(this, urls[i], i + ".apk", i);
+//        }
     }
 
     private void observer()

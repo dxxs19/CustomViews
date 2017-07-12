@@ -8,6 +8,7 @@
     android:layout_height="match_parent"
     tools:context="com.wei.customviews.view.activity.MainActivity">
 
+
     <!--<fragment
         android:id="@+id/fragment_conflict"
         android:layout_width="match_parent"
@@ -26,7 +27,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:background="@color/colorAccent"
         android:visibility="visible">
 
         // 自动换行布局
@@ -78,8 +78,36 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:src="@drawable/mode2"/>
+                android:src="@drawable/mode2"
+                android:visibility="gone"/>
         </com.wei.customviews.view.widget.CusRelativeLayout>
     </com.wei.customviews.view.widget.CusLinearLayout>
 
+
+    <Button
+        android:id="@+id/btn_openAdvs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="打开广告"/>
+
+    <Button
+        android:id="@+id/btn_clickAdvs"
+        android:layout_below="@id/btn_openAdvs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="点击广告"/>
+
+    <Button
+        android:id="@+id/btn_"
+        android:layout_below="@id/btn_clickAdvs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="汇总"/>
+
+    <com.wei.customviews.view.widget.OvalImageView
+        android:layout_below="@id/btn_"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:visibility="gone"
+        android:src="@mipmap/ic_adv_default"/>
 </RelativeLayout>
