@@ -1,10 +1,9 @@
 package com.wei.customviews.test.rxjava;
 
-import java.util.concurrent.Callable;
+import android.util.Log;
 
-import io.reactivex.Flowable;
-import io.reactivex.Observable;
-import io.reactivex.functions.Consumer;
+import rx.Observable;
+import rx.Subscriber;
 
 /**
  * author: WEI
@@ -13,6 +12,7 @@ import io.reactivex.functions.Consumer;
 
 public class RxTest
 {
+    private final String TAG = getClass().getSimpleName();
     private String[] words = {"Lily", "Apple", "Lucy"};
 
     public static void main(String[] args)
@@ -22,14 +22,38 @@ public class RxTest
 
     private void testRx()
     {
-        Observable.fromArray(words)
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String s) throws Exception {
-                        System.out.println(s);
-                    }
-                });
+        Subscriber subscriber=new Subscriber<String>() {
+            @Override
+            public void onCompleted() {
+                Log.i(TAG,"onCompleted");
+            }
 
+            @Override
+            public void onError(Throwable e) {
+                Log.i(TAG,"onError");
+            }
 
+            @Override
+            public void onNext(String s) {
+                Log.i(TAG,"onNext"+s);
+            }
+
+//            @Override
+//            public void onStart() {
+//                Log.i(TAG,"onStart");
+//            }
+        };
+
+//        创建 Observable(被观察者)
+        Observable observable = Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(Subscriber<? super String> subscriber) {
+                subscriber.onNext("杨影枫");
+                subscriber.onNext("月眉儿");
+                subscriber.onCompleted();
+            }
+        });
+
+        observable.subscribe(subscriber);
     }
 }
