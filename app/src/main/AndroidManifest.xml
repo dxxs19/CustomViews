@@ -7,12 +7,21 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
+        android:name=".view.BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".view.activity.MainActivity_">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN"/>-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--</intent-filter>-->
+        </activity>
+
+        <activity android:name=".view.activity.RxAndroidActivity_">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -43,8 +52,13 @@
             android:exported="true">
         </service>
 
-        <activity android:name=".view.activity.RxAndroidActivity">
-        </activity>
+        <service
+            android:name=".service.MyService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":AIDL_TEST">
+        </service>
+
     </application>
 
 </manifest>
