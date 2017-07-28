@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.wei.utillibrary.activity.BaseActivity;
 import com.wei.utillibrary.net.RequestCallback;
+import com.wei.utillibrary.utils.ToastUtil;
 
 /**
  * Activity的基类
@@ -18,7 +19,7 @@ import com.wei.utillibrary.net.RequestCallback;
 
 public abstract class AppBaseActivity extends BaseActivity
 {
-    protected String TAG = "";
+    protected String TAG = getClass().getSimpleName();
     protected Context mContext;
     protected RequestCallback mRequestCallback;
 
@@ -41,6 +42,11 @@ public abstract class AppBaseActivity extends BaseActivity
                     .setPositiveButton("确定", null)
                     .show();
         }
+    }
+
+    protected void showMsg(String msg)
+    {
+        ToastUtil.showMsg(this, msg);
     }
 
 }

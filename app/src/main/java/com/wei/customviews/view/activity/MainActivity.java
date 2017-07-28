@@ -293,71 +293,8 @@ public class MainActivity extends AppBaseActivity implements SlidingConflictFrag
             case R.id.update_item:
                 updateData();
                 break;
-
-            case R.id.rx_item:
-                testRx();
-                break;
         }
         return true;
-    }
-
-    Observer mToastObserver = new Observer<String>() {
-        @Override
-        public void onCompleted() {
-            Log.e(TAG, "完成！");
-        }
-
-        @Override
-        public void onError(Throwable e) {
-
-        }
-
-        @Override
-        public void onNext(String o) {
-            Log.e(TAG, o);
-            Toast.makeText(MainActivity.this, o, Toast.LENGTH_SHORT).show();
-        }
-    };
-
-    private void testRx()
-    {
-        Subscriber subscriber=new Subscriber<String>() {
-            @Override
-            public void onCompleted() {
-                Log.i(TAG,"onCompleted");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.i(TAG,"onError");
-            }
-
-            @Override
-            public void onNext(String s) {
-                Log.i(TAG,"onNext"+s);
-            }
-
-            @Override
-            public void onStart() {
-                Log.i(TAG,"onStart");
-            }
-        };
-
-        Observable observable;
-        // 创建 Observable(被观察者)
-        observable = Observable.create(new Observable.OnSubscribe<String>() {
-            @Override
-            public void call(Subscriber<? super String> subscriber) {
-                subscriber.onNext("杨影枫");
-                subscriber.onNext("月眉儿");
-                subscriber.onCompleted();
-            }
-        });
-//        observable = Observable.just("cai", "xiang", "wei");
-
-        observable.observeOn(AndroidSchedulers.mainThread());
-        observable.subscribe(subscriber);
-        observable.subscribe(mToastObserver);
     }
 
     private void updateData()

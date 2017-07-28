@@ -24,15 +24,8 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    // 编译libs目录下的所有jar包
     apt "org.androidannotations:androidannotations:$AAVersion"
-    //    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-    //        exclude group: 'com.android.support', module: 'support-annotations'
-    //    })
     compile project(':utillibrary')
-    // 加入rxjava
-//    compile 'io.reactivex.rxjava2:rxjava:2.0.0'
-
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'javax.inject:javax.inject:1'
     compile 'javax.annotation:javax.annotation-api:1.2'
@@ -40,9 +33,12 @@ dependencies {
     compile 'com.google.android.gms:play-services-ads:10.0.1'
     compile 'com.android.support:recyclerview-v7:25.1.0'
     compile 'com.android.support:support-v4:25.1.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha8'
     compile 'io.reactivex:rxjava:1.1.6'
     compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha8'
+    compile 'com.squareup.retrofit2:retrofit:2.2.0' // Retrofit2所需要的包
+    compile 'com.squareup.retrofit2:converter-gson:2.2.0' // ConverterFactory的Gson依赖包
+    compile 'com.squareup.retrofit2:converter-scalars:2.2.0' // ConverterFactory的String依赖包
     testCompile 'junit:junit:4.12'
     apt 'com.squareup.dagger:dagger-compiler:1.2.2'
     provided 'com.squareup.dagger:dagger-compiler:1.2.2'

@@ -17,8 +17,4 @@
         android:id="@+id/update_item"
         android:title="修改"/>
 
-    <item
-        android:id="@+id/rx_item"
-        android:title="RxAndroid"/>
-
 </menu>
