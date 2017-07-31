@@ -1,10 +1,18 @@
 package com.wei.customviews.view.activity;
 
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.View;
 
 import com.wei.customviews.R;
 import com.wei.customviews.model.bean.IpModel;
+import com.wei.customviews.service.MyService;
 import com.wei.customviews.view.AppBaseActivity;
 import com.wei.utillibrary.utils.LogUtil;
 
@@ -26,11 +34,13 @@ import static android.R.attr.country;
 @EActivity(R.layout.activity_ok_http)
 public class HttpActivity extends AppBaseActivity
 {
+    private MyService.MyBinder mMyBinder;
+
     @Override
     protected void onResume() {
         super.onResume();
 //        getHttp();
-        getRetrofit();
+//        getRetrofit();
     }
 
     private void getRetrofit()
@@ -87,4 +97,46 @@ public class HttpActivity extends AppBaseActivity
             }
         });
     }
+
+    public void startService(View view)
+    {
+        Intent intent_start = new Intent(this, MyService.class);
+        startService(intent_start);
+    }
+
+    public void stopService(View view)
+    {
+        Intent intent_start = new Intent(this, MyService.class);
+        stopService(intent_start);
+    }
+
+    public void bindService(View view)
+    {
+        Intent intent_bind = new Intent(this, MyService.class);
+        bindService(intent_bind, mServiceConnection, BIND_AUTO_CREATE);
+    }
+
+    public void unbindService(View view)
+    {
+        unbindService(mServiceConnection);
+    }
+
+    ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            LogUtil.e(TAG, "--- onServiceConnected ---");
+            mMyBinder = (MyService.MyBinder) iBinder;
+            try {
+                Thread.sleep(2000);
+                LogUtil.e(TAG, "currentcount is : " + mMyBinder.getCount());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            LogUtil.e(TAG, "--- onServiceDisconnected ---");
+        }
+    };
 }

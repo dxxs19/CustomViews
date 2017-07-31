@@ -2,12 +2,8 @@ package com.wei.customviews.view;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Messenger;
-import android.os.PersistableBundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 
-import com.wei.utillibrary.activity.BaseActivity;
 import com.wei.utillibrary.net.RequestCallback;
 import com.wei.utillibrary.utils.ToastUtil;
 
@@ -19,13 +15,12 @@ import com.wei.utillibrary.utils.ToastUtil;
 
 public abstract class AppBaseActivity extends BaseActivity
 {
-    protected String TAG = getClass().getSimpleName();
     protected Context mContext;
     protected RequestCallback mRequestCallback;
 
     @Override
-    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         mContext = this;
     }
 
