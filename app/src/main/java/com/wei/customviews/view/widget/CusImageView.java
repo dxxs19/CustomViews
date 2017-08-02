@@ -26,7 +26,7 @@ import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
  * date: 2017/2/21
  */
 
-public class CusImageView extends ImageView
+public class CusImageView extends android.support.v7.widget.AppCompatImageView
 {
     private final String TAG = getClass().getSimpleName();
 
@@ -43,11 +43,11 @@ public class CusImageView extends ImageView
         initView(context);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public CusImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        initView(context);
-    }
+//    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+//    public CusImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+//        super(context, attrs, defStyleAttr, defStyleRes);
+//        initView(context);
+//    }
 
     void initView(Context context)
     {
@@ -75,16 +75,16 @@ public class CusImageView extends ImageView
         objectAnimator1.setRepeatMode(ValueAnimator.REVERSE);
         objectAnimator1.setRepeatCount(ValueAnimator.INFINITE);
 
-        ObjectAnimator objectAnimator2 = ObjectAnimator.ofInt(this, "rotation", 0, 360);
-        objectAnimator2.setRepeatMode(ValueAnimator.REVERSE);
-        objectAnimator2.setRepeatCount(ValueAnimator.INFINITE);
+//        ObjectAnimator objectAnimator2 = ObjectAnimator.ofInt(this, "rotation", 0, 360);
+//        objectAnimator2.setRepeatMode(ValueAnimator.REVERSE);
+//        objectAnimator2.setRepeatCount(ValueAnimator.INFINITE);
 //        objectAnimator2.start();
 
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(
                 objectAnimator,
-                objectAnimator1,
-                objectAnimator2
+                objectAnimator1//,
+//                objectAnimator2
         );
         animatorSet.setDuration(1500);
         // 加速减速插值器
@@ -131,11 +131,12 @@ public class CusImageView extends ImageView
 
         mLastX = x;
         mLastY = y;
-        // 1.返回false或super.onTouchEvent(event)，自己不消耗事件，向上传播；
-        // 2.返回true，自己消耗事件。activity的dispatchTouchEvent及所有上层的dispatchTouchEvent还有onInterceptTouchEvent及
-        //   自己的dispatchTouchEvent还有onTouchEvent都会被调用；
+        // 1.返回false，自己不消耗事件，向上传播
+        // 2.返回true或super.onTouchEvent(event)，自己消耗事件。activity的dispatchTouchEvent及所有上层的dispatchTouchEvent还有onInterceptTouchEvent及
+        //   自己的dispatchTouchEvent还有onTouchEvent都会被调用。super.onTouchEvent(event)与ViewGroup的不一样
 //        return super.onTouchEvent(event);
-        return true;
+//        return true;
+        return false;
     }
 
     private void smoothScrollTo(int destX, int destY)
@@ -161,10 +162,12 @@ public class CusImageView extends ImageView
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         LogUtil.e(TAG, "--- dispatchTouchEvent(MotionEvent ev) ---");
-        // 1.返回false表示事件不再向下分发，onInterceptTouchEvent及onTouchEvent也不会被调用。事件向上传递；
-        // 2.返回true，则onInterceptTouchEvent及onTouchEvent不会被调用，上层的onTouchEvent也不会被调用。事件无法被消费
-        // 3.返回super.dispatchTouchEvent(ev)，则事件继续向下分发，事件由自己的onTouchEvent决定是否处理；
+        // 1.返回false，则事件不再向下分发，onInterceptTouchEvent及onTouchEvent不会被调用。事件向上传递；
+        // 2.返回true， 则事件不再向下分发，onInterceptTouchEvent及onTouchEvent不会被调用，上层的onTouchEvent也不会被调用,只有上层及本层dispatchTouchEvent(MotionEvent ev)被调用
+        // 3.返回super.dispatchTouchEvent(ev)，则事件继续向下分发，事件由自己的onTouchEvent决定是否处理，一般返回这个；
         return super.dispatchTouchEvent(ev);
+//        return true;
+//        return false;
     }
 
 }

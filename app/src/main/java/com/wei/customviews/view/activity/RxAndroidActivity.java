@@ -28,7 +28,7 @@ public class RxAndroidActivity extends AppBaseActivity {
     private final String TAG = getClass().getSimpleName();
     final String[] words = {"Hi,", "I", "love", "you", "very", "much"};
     final List<String> wordsList = Arrays.asList(words);
-    final int[] resIds = new int[]{R.mipmap.ic_adv_default, R.mipmap.ic_launcher};
+    final int[] resIds = new int[]{R.drawable.ic_adv_default, R.mipmap.ic_launcher};
     @ViewById
     ImageView imgView_content;
 

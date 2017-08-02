@@ -38,19 +38,10 @@ public class DB_ContentProviderActivity extends AppBaseActivity
     @Override
     protected void onResume() {
         super.onResume();
-//        MatrixCursor cursor = (MatrixCursor) query();
-//        if (cursor.moveToFirst())
-//        {
-//            do{
-//                String id = cursor.getString(cursor.getColumnIndex("id"));
-//                String name = cursor.getString(cursor.getColumnIndex("name"));
-//                String age = cursor.getString(cursor.getColumnIndex("age"));
-//                LogUtil.e(TAG, "--- info --- " + id + ", " + name + ", ");
-//            }
-//            while (cursor.moveToNext());
-//        }
         copyDB("chat.db", R.raw.chat);
         openDB(Environment.getExternalStorageDirectory() + File.separator + "chat.db");
+        int a = 2 << 3; // 2的3次方
+        LogUtil.e(TAG, "a = " + a);
     }
 
     // 拷贝数据库
