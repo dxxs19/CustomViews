@@ -6,9 +6,18 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Environment;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.io.UnsupportedEncodingException;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.List;
 
 /**
@@ -130,4 +139,38 @@ public class OsUtil
         }
         return imageName;
     }
+
+    public static String getMacAddress(Context context)
+    {
+        String macAddress =null;
+        try {
+            NetworkInterface networkInterface = NetworkInterface.getByName("wlan0");
+            if (null == networkInterface)
+                return "";
+            byte[] macs = networkInterface.getHardwareAddress();
+            if (null == macs)
+                return "";
+            StringBuilder builder = new StringBuilder();
+            for (byte b:macs) {
+                builder.append(String.format("%02x:", b));
+            }
+            if (builder.length() > 0)
+            {
+                builder.deleteCharAt(builder.length() - 1);
+            }
+            macAddress = builder.toString();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        return macAddress;
+    }
+
+    public static String getIMEI(Context context)
+    {
+        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+//        String imsi = telephonyManager.getSubscriberId();
+        String imes = telephonyManager.getDeviceId();
+        return imes;
+    }
+
 }

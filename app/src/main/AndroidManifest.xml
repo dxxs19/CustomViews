@@ -14,13 +14,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".view.activity.MainActivity_">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN"/>-->
 
-             <intent-filter>
-             <action android:name="android.intent.action.MAIN"/>
-
-
-             <category android:name="android.intent.category.LAUNCHER"/>
-             </intent-filter>
+                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--</intent-filter>-->
         </activity>
         <activity android:name=".view.activity.RxAndroidActivity_">
 
@@ -58,21 +56,33 @@
             android:name=".service.MyService"
             android:enabled="true"
             android:exported="true">
-            <!--android:process=":AIDL_TEST">-->
+
+            <!-- android:process=":AIDL_TEST"> -->
         </service>
 
         <activity android:name=".view.activity.DB_ContentProviderActivity_">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN"/>-->
-                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
-            <!--</intent-filter>-->
+
+             <intent-filter>
+             <action android:name="android.intent.action.MAIN"/>
+             <category android:name="android.intent.category.LAUNCHER"/>
+             </intent-filter>
         </activity>
         <activity android:name=".view.activity.HttpActivity_">
-            <!--<intent-filter>
+
+            <!--
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>-->
+            </intent-filter>
+            -->
         </activity>
+
+        <provider
+            android:name=".db.MyContentProvider"
+            android:authorities="com.wei.customviews.CONTENT_PROVIDER"
+            android:enabled="true"
+            android:exported="true">
+        </provider>
     </application>
 
 </manifest>
