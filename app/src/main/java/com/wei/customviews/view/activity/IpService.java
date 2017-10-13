@@ -5,6 +5,7 @@ import com.wei.customviews.model.bean.IpModel;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+import rx.Observable;
 
 /**
  * author: WEI
@@ -22,4 +23,10 @@ public interface IpService {
      */
     @GET("getIpInfo.php")
     Call<IpModel> getIpMsg(@Query("ip")String ip);
+
+    @GET("getIpInfo.php")
+    Observable<IpModel> getIp(@Query("id")String id, @Query("token")String token);
+
+    @GET("/token")
+    Observable<String> getToken();
 }

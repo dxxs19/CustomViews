@@ -28,6 +28,11 @@ import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 import static android.R.attr.country;
 
@@ -53,7 +58,7 @@ public class HttpActivity extends AppBaseActivity
                 .build();
 //        这里的baseUrl加上之前@GET(“getIpInfo.php”)定义的参数形成完整的请求地址；
 //       addConverterFactory用于指定返回的参数数据类型，这里我们支持String和Gson类型。
-        IpService ipService = retrofit.create(IpService.class);
+        final IpService ipService = retrofit.create(IpService.class);
         retrofit2.Call<IpModel> call = ipService.getIpMsg("61.144.145.42");
         call.enqueue(new retrofit2.Callback<IpModel>() {
             @Override
@@ -68,6 +73,31 @@ public class HttpActivity extends AppBaseActivity
                 LogUtil.e(TAG, throwable.getMessage());
             }
         });
+
+        ipService.getToken()
+                .flatMap(new Func1<String, Observable<IpModel>>() {
+                    @Override
+                    public Observable<IpModel> call(String token) {
+                        return ipService.getIp("001", token);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<IpModel>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+
+                    }
+
+                    @Override
+                    public void onNext(IpModel ipModel) {
+
+                    }
+                });
     }
 
     private void getHttp()
